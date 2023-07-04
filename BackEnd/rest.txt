@@ -1,0 +1,88 @@
+
+/*============================== Examples ============================== */
+
+
+// This is called route pararemeters
+// Example Url: root/api/stores/1/2/etc
+// The parameters can be chained
+server.get('/api/example/:id', (req,res) => {
+	res.send(req.params.id);
+});
+
+// We can also incorporate query string
+// parameters -> symbolized with
+// ?name_value=pairs and can be chained
+// using ?name1=v1&&name2=v2
+// We use query sting parameters to provide
+// additional/optional data to the backend
+server.get('/api/example/:id', (req,res) => {
+	// Check if the data exists 
+	// else by rest standards return
+	// 404 status code
+	const example = examples.find( c => c.id === parseInt(req.params.id));
+	if (!example) res.status(404).send('example not found');
+	res.send(req.query);
+});
+
+// In order to parse the body of a request
+// as a json object, we have to enable 
+// the feature.-> server.use(express.json())
+// We are using a layer of middleware ->
+// express.json() and we are using it with
+/// server.use
+server.post('/api/examples',(req,res)=>{
+	// In order to use req.body.name
+	// use(express.json()) is mandatoty
+	const example = {
+		name: req.body.name
+	};
+	// Do something with example
+	// Validate the input
+	// In case of user error:
+	// return res.status(400)  
+	//console.log(example);
+	// After We commonly may need to 
+	// send this object back to the 
+	// client to update a json array
+	// use it .. etc.
+	res.send(example);
+	// In a real application is it 
+	// is always better to validate 
+	// the input
+})
+
+// We are updating a specific object
+// Thats why we are using route parameters
+// Firstly check if the object beeing 
+// updated exists, if not return 404
+// Secondly validate the input
+server.put('/api/example/:id',(res,req)=>{
+	const example = examples.find( c => c.id === parseInt(req.params.id))
+	if (!example) return res.status(404).send('example not found');
+	// Validate the input -- may use joi npm package
+	example.name = req.body.name;
+	// Update the client
+	res.send(example);	
+});
+
+// Lastly as it is logically extracted
+// with the same way we deal .delete http
+// requests.
+server.delete('/api/example/:id',(res,req)=>{
+	// 1. Check if object under deletion exists
+	// Else return 404
+	const example = examples.find( c => c.id === parseInt(req.params.id))
+	if (!example) return res.status(404).send('example not found');
+	// Get the wanted index of the object array
+	const index = examples.indexOf(example)
+	examples.splice(index,1); // or delete examples[index]
+
+})
+
+// Express automatically offers the possibility
+// of redirecting a request to another url. Returns
+// a status code of 301 and forces the client to 
+// create another request to the new url
+server.get('/about', (req,res) => {
+	res.redirect('/api/examples');
+});

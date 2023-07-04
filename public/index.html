@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MarketBook</title>
+
+	<!-- Include Leaflet CSS file in the head section of your html Document -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+		integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+	<!-- Include Leaflet Js file after leaflet's css -->
+	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+		integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin="">
+	</script>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		.block {
+			border: 2px solid black;
+		}
+	</style>
+</head>
+
+<script type="text/javascript">
+
+	function storeSearch(){
+		let storeSearchBoxValue = document.getElementById('storeSearchBox').value;
+		let filtered  = feature => (feature.properties.name == storeSearchBoxValue)?true:false;
+		stores.then((res)=>{
+			storesFilteredMarkers = L.geoJSON( res, {
+				pointToLayer: gjson_pointToLayer,
+				onEachFeature: gjson_onEachFeature,
+				filter: filtered
+			});
+			map.removeLayer(storesMarkers);
+			storesFilteredMarkers.addTo(map);
+		});
+	};
+	function categorySearch(){
+		let categorySearchBoxValue = document.getElementById('categorySearchBox').value;
+		categories.then((res)=>{
+			console.log(JSON.stringify(res));
+			let chosenCategory = res.find((res)=>{
+				return (categorySearchBoxValue == res.name);
+			});
+			if ( typeof(chosenCategory) != "undefined"){
+				console.log(chosenCategory.id);
+				let storesSearchedByCategory = fetchAPI(`/api/stores/categories/:${chosenCategory.id}`);
+				storesSearchedByCategory.then((res)=>{
+					storesFilteredMarkers = L.geoJSON( res, {
+						pointToLayer: gjson_pointToLayer,
+						onEachFeature: gjson_onEachFeature,
+					});
+				map.removeLayer(storesMarkers);
+				storesFilteredMarkers.addTo(map);
+				});
+			}
+		});
+	};
+	function ResetMap(){
+		map.removeLayer(storesFilteredMarkers);
+		storesMarkers.addTo(map);
+	}
+</script>
+
+<body style="margin: 0; position: absolute;">
+
+	<div style="height: 100vh; width: 100vw;">
+		<div class="block" style="width: 100%; height: 10%;">
+			<form style="padding: 20px;">
+				<label for="storeSearchBox">Search by Store Name: </label>
+				<input type="text" id="storeSearchBox" name="storeSearchBox">
+				<button type="button" onclick="storeSearch()">Submit</button><br>
+				<label for="categorySearchBox">Search by product Category: </label>
+				<input type="text" id="categorySearchBox" name="categorySearchBox">
+				<button type="button" onclick="categorySearch()">Submit</button><br>
+				<button type="button" onclick="ResetMap()">Reset</button><br>
+			</form>
+		</div>
+		<div style="width: 100%; height: 90%;">
+			<div class="block" id="map" style="float: left; width: 80%; height: 100%;"></div>
+			<div class="block" style="float: right; width: 20%; height: 100%;">
+				<div id="storeName" style="width: 100%; height: 5%; 
+				border-bottom: 2px solid black; text-align: center;">
+				</div>
+				<div id="storeInfo" style="width: 100%; height: 95%; 
+				border-bottom: 2px solid black; text-align: left;">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		async function fetchAPI(url){
+			try {
+				const response = await fetch(url);
+				if (!response.ok) {
+					const message = `Error: fetch '${url}' returned with: ${response.status}`;
+					throw new Error(message);
+				}
+				return await response.json();
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		function initializeGeoLocation(location, userMarker) {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(position => {
+					location.lat = position.coords.latitude;
+					location.lon = position.coords.longitude
+					// initialzie user marker
+					userMarker = L.marker([location.lat, location.lon], { icon: userIcon });
+					userMarker.addTo(map);
+					// Zoom to current location
+					map.flyTo([location.lat, location.lon], 16);
+				});
+			} else {
+				console.log('geolocation not available');
+			}
+		}
+		function gjson_onClick(feature,nameElement,infoElement,storeLabel) {
+			nameElement.innerHTML = `<h2>${storeLabel}</h2>`;
+			console.log(feature.properties.name);
+			let info = fetchAPI(`/api/stores/${feature.properties.id}`);
+			info.then((res)=>{
+				infoElement.innerHTML= JSON.stringify(res);
+			});
+		}
+		function gjson_pointToLayer(feature, latlng) {
+			let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
+			return L.marker(latlng, {
+				opacity: marker_opacity,
+				icon: marketIcon
+			});
+		}
+		function gjson_onEachFeature(feature, layer) {
+			let storeLabel = (feature.properties.name == null) ? "Unknown" : feature.properties.name
+			layer.on('click', () => { gjson_onClick(feature,storeName,storeInfo,storeLabel); });
+			layer.bindPopup(`<h4>${storeLabel}</h4>`, { closeButton: false, offset: L.point(+15, -20) });
+			layer.on('mouseover', () => { layer.openPopup(); });
+			layer.on('mouseout', () => { layer.closePopup(); });
+		}
+		function gjson_createMarkerLayer(geoJson){
+			let layer =  L.geoJSON( geoJson, {
+				pointToLayer: gjson_pointToLayer,
+				onEachFeature: gjson_onEachFeature
+			});
+			return layer;
+		}
+	</script>
+
+	<script type="text/javascript">
+		// Initialize asynchronous fetching
+		let stores = fetchAPI('/api/stores');
+		let categories = fetchAPI('/api/categories');
+
+		// Initialize the map , Declare the user variables
+		let userLocation = { lat: null, lon: null };
+		const startLocation = { lat: 38.24638, lon: 21.73505 };
+		let userMarker = null, storesMarkers = null, storesFilteredMarkers = null;
+
+		// initialize map object
+		const map = L.map('map').setView([startLocation.lat, startLocation.lon], 16);
+		map.zoomControl.setPosition('topright');
+		
+		// Add a tile layer to our map. OpenStreetMap's tile layer involes the URL Template for the tile
+		// images and attrubution text. You can also set maxZoom:19 etc
+		const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		const tileUrl = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+		tiles = L.tileLayer(tileUrl, { attribution });
+		tiles.addTo(map);
+
+		// Access once important document.elements
+		const storeName = document.getElementById('storeName');
+		const storeInfo = document.getElementById('storeInfo');
+		
+		// Create Icons for markets and User
+		const userIcon = L.icon({
+			iconUrl: '/iconResources/marker_user.png',
+			iconSize: [48, 48],
+			iconAnchor: [4, 24]
+		});
+
+		const marketIcon = L.icon({
+			iconUrl: '/iconResources/marker_market.png',
+			iconSize: [42, 42],
+			iconAnchor: [4, 21]
+		});
+
+		// Making map and tiles in the defualt location
+		// By default (as we didn’t pass any options when creating the map instance),
+		// all mouse and touch interactions on the map are enabled, and it has zoom
+		// and attribution controls.
+		
+		// Inintialize markers based on fetched data
+		stores.then((res)=>{
+			if( typeof(res) !== 'undefined'){
+				storesMarkers = gjson_createMarkerLayer(res);
+				storesMarkers.addTo(map);
+			}
+		});
+		
+		// initialize geolocation and userMarker
+		initializeGeoLocation(userLocation, userMarker);
+	</script>
+</body>
+
+</html>
