@@ -1,17 +1,16 @@
-"use strict";
+'use strict';
 
-import { tableInfo } from '../dbToNode.mjs';
+import { categories } from '../express.mjs';
 import express from 'express';
 
 export const routerCategories = express.Router();
 
-routerCategories.get('/',(req,res)=>{
-	let categories = tableInfo('categories',['*']);
-	categories.then((result)=>{
-		res.send(JSON.stringify(result));
-	});
-	categories.catch((error)=>{
-		res.status(500)
-		.send(`Error 500: ${error}`);
-	});
+routerCategories.get('/', async (req, res) => {
+  try {
+    const result = await categories;
+    res.send(JSON.stringify(result));
+  } catch (error) {
+    console.error('Error in routerCategories:', error);
+    res.status(500).send('Error 500: Internal Server Error');
+  }
 });

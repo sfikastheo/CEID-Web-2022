@@ -7,38 +7,34 @@ import express from 'express';
 export const routerStores = express.Router();
 
 // Request available Stores
-routerStores.get('/', (req,res) => {
-	res.send(JSON.stringify(stores));
+routerStores.get('/', async (req, res) => {
+  try {
+    const storesData = await stores;
+    res.send(JSON.stringify(storesData));
+  } catch (error) {
+    res.status(500).send('Error 500: Internal server error.');
+  }
 });
 
 // Request information about a Store based on id:
-routerStores.get('/:id', (req,res) => {
-	// if store id does not exists
-	// json.stringify(result)=[]
-	// Empty json will be returned
-	// If we want to alter this behavior
-	// we need to query the amount of stores
-	// in our database and check whether
-	// the wanted id exists or not
-	let store = storeInfo(req.params.id);
-	store.then((result)=>{
-		res.send(JSON.stringify(result));
-	});
-	store.catch((error)=>{
-		res.status(500)
-		.send(`Error 500: ${error}`);
-	})
+routerStores.get('/:id', async (req, res) => {
+  try {
+    const storeId = req.params.id;
+    const storeData = await storeInfo(storeId);
+    res.send(JSON.stringify(storeData));
+  } catch (error) {
+    res.status(500).send('Error 500: Internal server error.');
+  }
 });
 
-routerStores.get('/categories/:id',(req,res)=>{
-	let stores = storesFromCategory(req.params.id);
-	stores.then((result)=>{
-		res.send(JSON.stringify(result));
-	})
-	stores.catch((error)=>{
-		res.status(500)
-		.send(`Error 500: ${error}`);
-	});
+routerStores.get('/categories/:id', async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const storesData = await storesFromCategory(categoryId);
+    res.send(JSON.stringify(storesData));
+  } catch (error) {
+    res.status(500).send('Error 500: Internal server error.');
+  }
 });
 
 routerStores.get('/subcategories/:id',(req,res)=>{

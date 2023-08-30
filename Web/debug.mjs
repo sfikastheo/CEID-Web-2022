@@ -1,20 +1,15 @@
 'use strict';
 
-import { registerUser } from './dbToNode.mjs';
-import bcrypt from 'bcrypt';
+import { storesFromCategory } from './dbToNode.mjs';
 
 
-registerUser('maria', 'maria.pap@gmail.com', 'Maria2001').then((result) => {
-  console.log(result);
-  process.exit(0);
-}).catch((error) => {
-  console.log(error);
-  process.exit(0);
-});
+const tableFields = ['*']; // Replace with the actual field names
 
-// stop the programe for running indefinitely
-// After the promise is resolved the process will exit
-
-
+try {
+  const tableData = await storesFromCategory('1');  
+  console.log(tableData);
+} catch (error) {
+  console.error('Error:', error.message);
+}
 
 
