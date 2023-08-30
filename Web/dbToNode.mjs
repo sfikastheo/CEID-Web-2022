@@ -8,30 +8,57 @@ const mariadb = await Mariadb.createConnection();
 /*================================ Login ================================ */
 
 export async function validateLogin(user, password, type) {
-  let query;
-  
-  if (type) {
-    query = `SELECT id, passwd FROM users WHERE email = ?;`;
-  } else {
-    query = `SELECT id, passwd FROM users WHERE username = ?;`;
-  }
+	let query;
 
-  try {
-    const result = await mariadb.paramQuery(query, [user]);
-    if (result.length > 0) {
-      const passwordMatch = await bcrypt.compare(password, result[0].passwd);
-      if (passwordMatch) {
-        return { success: true, userId: result[0].id };
-      } else {
-        return { success: false, message: 'Incorrect password, please try again.' };
-      }
-    } else {
-      return { success: false, message: 'User not found, please register first.' };
-    }
-  } catch (error) {
-    console.error('Error validating login:', error);
-    return { success: false, message: 'Sorry, An internal error occurred.' };
-  }
+	if (type) {
+		query = `SELECT id, passwd FROM users WHERE email = ?;`;
+	} else {
+		query = `SELECT id, passwd FROM users WHERE username = ?;`;
+	}
+
+	try {
+		const result = await mariadb.paramQuery(query, [user]);
+		if (result.length > 0) {
+			const passwordMatch = await bcrypt.compare(password, result[0].passwd);
+			if (passwordMatch) {
+				return { success: true, userId: result[0].id };
+			} else {
+				return { success: false, message: 'Incorrect password, please try again.' };
+			}
+		} else {
+			return { success: false, message: 'User not found, please register first.' };
+		}
+	} catch (error) {
+		console.error('Error validating login:', error);
+		return { success: false, message: 'Sorry, An internal error occurred.' };
+	}
+}
+
+/*================================ Register ================================ */
+
+export async function registerUser(username, email, password) {
+	try {
+		// Check if username or email already exist
+		const userExistQuery = `SELECT COUNT(*) AS count FROM users WHERE username = ? OR email = ?;`;
+		const userExistResult = await mariadb.paramQuery(userExistQuery, [username, email]);
+		
+		if (userExistResult[0].count > 0) {
+			return { success: false, message: 'Username or email already in use' };
+		}
+
+		// If not exists, insert the new user
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const insertUserQuery = `INSERT INTO users (username, email, passwd) VALUES (?, ?, ?);`;
+		await mariadb.paramQuery(insertUserQuery, [username, email, hashedPassword]);
+		
+		// Commit the changes
+    await mariadb.commit();
+
+		return { success: true };
+	} catch (error) {
+		console.error('Error registering user:', error);
+		return { success: false, message: 'An internal error occurred' };
+	}
 }
 
 /*================================ Other ================================ */

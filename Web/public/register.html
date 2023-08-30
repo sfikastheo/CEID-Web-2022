@@ -87,6 +87,11 @@
   </section>
 
   <script type="text/javascript">
+    // regex of email:
+    const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // regex of password: at least 8 letters, 1 uppercase, 1 number:
+    const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
+
     document.addEventListener("DOMContentLoaded", function () {
       const registerButton = document.getElementById("register_button");
       const nameInput = document.getElementById("name_input");
@@ -97,8 +102,26 @@
       registerButton.addEventListener("click", function (e) {
         e.preventDefault();
 
-        if ( !nameInput.value || !emailInput.value || !passwordInput.value || !password2Input.value) {
+        if (!nameInput.value || !emailInput.value || !passwordInput.value || !password2Input.value) {
           alert("Please fill in all fields.");
+          return;
+        }
+
+        if (!email_regex.test(emailInput.value)) {
+          alert("Please enter a valid email address.");
+          
+          // Clear the email field
+          emailInput.value = "";
+          return;
+        }
+
+        if (!password_regex.test(passwordInput.value)) {
+          alert("Please enter a valid password. Password must \
+          contain at least 8 characters, 1 uppercase letter and 1 number.");
+          
+          // Clear the password fields
+          passwordInput.value = "";
+          password2Input.value = "";
           return;
         }
 
@@ -111,7 +134,7 @@
           password2Input.value = "";
           return;
         }
-        
+
         // All checks passed, proceed with sending the form data
         const formData = {
           name: nameInput.value,
@@ -142,6 +165,46 @@
             console.error("Error:", error);
           });
       }
+
+      function sendData(data) {
+        fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.message === 'Registration successful') {
+              console.log('Registration successful');
+              alert('Registration successful, please login to continue.');
+              // Redirected to a success page
+              window.location.href = '/index.html';
+            } else {
+              // Display error message to the user
+              console.error('Error:', result.message);
+              alert(result.message);
+
+              // Clear the fields
+              nameInput.value = '';
+              emailInput.value = '';
+              passwordInput.value = '';
+              password2Input.value = '';
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+
+            // Clear the fields
+            nameInput.value = '';
+            emailInput.value = '';
+            passwordInput.value = '';
+            password2Input.value = '';
+          });
+      }
+
     });
   </script>
 

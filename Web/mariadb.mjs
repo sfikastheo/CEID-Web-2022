@@ -44,6 +44,17 @@ export class Mariadb {
 		if (this.conn) this.conn.close();
 	}
 
+	async commit() {
+		try {
+			await this.conn.commit();
+		} catch (error) {
+			// If there is an error, rollback the changes
+			await this.conn.rollback();
+			console.error("Aborted: Error committing a transaction: ", error);
+			throw error; // Re-throw the error to be handled at a higher level
+		}
+	}
+
 	async query(query) {
 		try {
 			await this.conn.beginTransaction();

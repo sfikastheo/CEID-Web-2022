@@ -11,7 +11,7 @@ import { storesToGeoJson } from './dbToNode.mjs';
 import { routerLogin } from './routes/login.mjs';
 import { routerStores } from './routes/stores.mjs';
 import { routerCategories } from './routes/categories.mjs';
-// import { routerRegister } from './routes/register.mjs';
+import { routerRegister } from './routes/register.mjs';
 
 
 /*================================ Misc ================================ */
@@ -37,6 +37,9 @@ export function auth(req, res, next) {
 		res.redirect('/'); // redirect to the login page
 	}
 }
+
+// 1. Consider creating a errorhandler middleware
+// https://expressjs.com/en/guide/error-handling.html
 
 /*============================== Server ============================== */
 
@@ -132,7 +135,7 @@ server.listen(port, () => {
 // The most common handler in the beggining.
 
 server.use('/api/login', routerLogin);
-// server.use('/api/register',routerRegister);
+server.use('/api/register',routerRegister);
 server.use('/api/stores', routerStores);
 server.use('/api/categories', routerCategories);
 
@@ -147,8 +150,3 @@ server.use((req, res) => {
 	res.status(404)
 		.send(`Error 404: '${req.url}' was not found!`);
 });
-
-/*============================== Global Middleware ============================== */
-
-// 1. Consider creating a errorhandler middleware
-// https://expressjs.com/en/guide/error-handling.html
