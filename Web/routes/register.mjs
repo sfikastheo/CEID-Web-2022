@@ -7,7 +7,7 @@ export const routerRegister = express.Router();
 
 const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 // regex of password: at least 8 letters, 1 uppercase, 1 number:
-const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
+const password_regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/gm;
 
 routerRegister.post('/', (req, res) => {
   const { name, email, password } = req.body;
@@ -29,8 +29,7 @@ routerRegister.post('/', (req, res) => {
   // Check if password is valid
   if (!password_regex.test(password)) {
     return res.status(400).json({
-      message: 'Please provide a valid password. \
-      Password must contain at least 8 characters and at least a number'
+      message: 'Please provide a valid password. Password must contain at least 8 characters and an uppercase letter, a number and a special character.'
     });
   }
 

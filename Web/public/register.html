@@ -94,7 +94,7 @@
     // regex of email:
     const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // regex of password: at least 8 letters, 1 uppercase, 1 number:
-    const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
+    const password_regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/gm;
 
     document.addEventListener("DOMContentLoaded", function () {
       const registerButton = document.getElementById("register_button");
@@ -113,16 +113,15 @@
 
         if (!email_regex.test(emailInput.value)) {
           alert("Please enter a valid email address.");
-          
+
           // Clear the email field
           emailInput.value = "";
           return;
         }
 
         if (!password_regex.test(passwordInput.value)) {
-          alert("Please enter a valid password. Password must \
-          contain at least 8 characters, 1 uppercase letter and 1 number.");
-          
+          alert("Please provide a valid password. Password must contain at least 8 characters and an uppercase letter, a number and a special character.");
+
           // Clear the password fields
           passwordInput.value = "";
           password2Input.value = "";
