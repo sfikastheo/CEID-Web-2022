@@ -35,8 +35,11 @@ routerLogin.post('/', (req, res) => {
     if (result.success) {
       // Create a session & Cookie
       req.session.userId = result.userId;
-      res.cookie('authToken', req.sessionID, {maxAge: 60000,
-        sameSite: "None", secure: false});
+      res.cookie('authToken', req.sessionID, {
+        maxAge: 60000,
+        sameSite: "None",
+        secure: false,
+      });
       res.status(200).json({ message: 'Login successful'});
     }
     else {

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>haggle</title>
 
-  <!-- MDB icon -->
+  <!-- Title icon -->
   <link rel="icon" href="img/location-dot.svg" type="image/x-icon" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -108,12 +108,37 @@
 
     // ============================  Map Functions  ============================
 
+    function gjson_onClick(feature, nameElement, infoElement, storeLabel) {
+      nameElement.innerHTML = `<h2>${storeLabel}</h2>`;
+      console.log(feature.properties.name);
+      let info = fetchAPI(`/api/stores/${feature.properties.id}`);
+      info.then((res) => {
+        infoElement.innerHTML = JSON.stringify(res);
+      });
+    }
+
+    function gjson_onEachFeature(feature, layer) {
+      let storeLabel = (feature.properties.name == null) ? "Unknown" : feature.properties.name
+      layer.on('click', () => { gjson_onClick(feature, storeName, storeInfo, storeLabel); });
+      layer.bindPopup(`<h4>${storeLabel}</h4>`, { closeButton: false, offset: L.point(+15, -20) });
+      layer.on('mouseover', () => { layer.openPopup(); });
+      layer.on('mouseout', () => { layer.closePopup(); });
+    }
+
+    function gjson_pointToLayer(feature, latlng) {
+      let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
+      return L.marker(latlng, {
+        opacity: marker_opacity,
+        icon: marketIcon
+      });
+    }
+
     function gjson_createMarkerLayer(geoJson) {
-			let layer = L.geoJSON(geoJson, {
-				pointToLayer: gjson_pointToLayer,
-				onEachFeature: gjson_onEachFeature
-			});
-			return layer;
+      let layer = L.geoJSON(geoJson, {
+        pointToLayer: gjson_pointToLayer,
+        onEachFeature: gjson_onEachFeature
+      });
+      return layer;
     }
 
     // Function to reset the map
@@ -124,7 +149,7 @@
     }
 
     // ========================= Initialization Functions =========================
-    
+
     function initializeGeoLocation(userLocation, userMarker) {
       // Initialize geolocation
       if (navigator.geolocation) {
@@ -140,19 +165,7 @@
     }
 
 
-    function initializeApp() {
-      // ============================== Initialize Map ==============================
-
-      // Initialize geolocation and userMarker
-      initializeGeoLocation(userLocation, userMarker);
-
-      // Display initial markers
-      stores.then(res => {
-        if (res.features) {
-          storesMarkers = gjson_createMarkerLayer(res.features);
-          storesMarkers.addTo(map);
-        }
-      });
+    function initializeEventListeners() {
 
       // ======================== Initialize Event Listeners ========================
       document.getElementById("storeSearchButton").addEventListener("click", () => {
@@ -189,12 +202,58 @@
 
       document.getElementById("resetButton").addEventListener("click", resetMap);
 
-   }
+    }
 
     // ==============================  Execute Logic  ==============================
 
+    // Initialize async variables
+    let stores = fetchAPI("/api/stores", "GET");
+    let categories = fetchAPI("/api/categories", "GET");
+
+    // Create custom marker icons
+    const userIcon = L.icon({
+      html: '<i class="fa-solid fa-circle-dot fa-beat"></i>',
+      className: 'fa-icon',
+      iconSize: [42, 42],
+      iconAnchor: [4, 24],
+    });
+
+    const marketIcon = L.icon({
+      html: '<i class="fa-solid fa-location-dot"></i>',
+      className: 'fa-icon',
+      iconSize: [38, 38],
+      iconAnchor: [4, 24],
+    });
+
+    // Initialize map, markers, locations & layers
+    const startLocation = { lat: 38.24638, lng: 21.73505 };
+    let userLocation = { lat: null, lng: null };
+    let userMarker = null, storesMarkers = null, storesFilteredMarkers = null;
+
+    const map = L.map('map').setView(startLocation, 15);
+    var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+    });
+    OpenStreetMap_HOT.addTo(map);
+
+    L.marker(startLocation, { icon: userIcon });
+
+    // ============================== Initialize Map ==============================
+
+    // Initialize geolocation and userMarker
+    initializeGeoLocation(userLocation, userMarker);
+
+    // Display initial markers
+    stores.then(res => {
+      if (res.features) {
+        storesMarkers = gjson_createMarkerLayer(res.features);
+        storesMarkers.addTo(map);
+      }
+    });
+
     // Initialize the app
-    initializeApp();
+    initializeEventListeners();
 
   </script>
 
