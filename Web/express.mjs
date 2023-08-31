@@ -147,8 +147,9 @@ server.get('/', (req, res) => {
 
 server.use('/api/login', routerLogin);
 server.use('/api/register',routerRegister);
-server.use('/api/stores', routerStores);
-server.use('/api/categories', routerCategories);
+
+server.use('/api/stores', auth, routerStores);
+server.use('/api/categories', auth, routerCategories);
 
 server.use('/users/', auth, routerUsers);
 

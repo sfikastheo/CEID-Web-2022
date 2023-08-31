@@ -38,9 +38,7 @@
                     <div class="sidebar-brand-icon">
                         <i class="fa-solid fa-location-dot"></i>
                     </div>
-                    <div class="sidebar-brand-text mx-3" style="text-transform: none;"><span>
-                            <h2>haggle</h3>
-                        </span></div>
+                    <div class="sidebar-brand-text mx-3" style="text-transform: none;"><span><h2>haggle</h3></span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
@@ -61,18 +59,18 @@
                         <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop"
                             type="button"><i class="fas fa-bars"></i></button>
                         <!-- Search fields if window is large enough  -->
-                        <form class="me-auto mw-100 navbar-search d-sm-flex d-none">
+                       <form class="me-auto mw-100 navbar-search d-sm-flex d-none">
                             <div class="input-group" style="padding-right: 20px;">
                                 <input class="bg-light form-control border-0 small" type="text"
                                     placeholder="Search for stores ...">
-                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i></button>
+                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;" type="button"><i
+                                        class="fas fa-search"></i></button>
                             </div>
                             <div class="input-group">
                                 <input class="bg-light form-control border-0 small" type="text"
                                     placeholder="Search for products ...">
-                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i></button>
+                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;" type="button"><i
+                                        class="fas fa-search"></i></button>
                             </div>
                         </form>
 
@@ -90,8 +88,8 @@
                                             <input class="bg-light form-control border-0 small" type="text"
                                                 placeholder="Search for stores ...">
                                             <div class="input-group-append">
-                                                <button class="btn btn-primary bg-gradient-custom py-0"
-                                                    style="border: 0px;" type="button"><i class="fas fa-search"></i>
+                                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;" type="button"><i
+                                                        class="fas fa-search"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -99,8 +97,7 @@
                                             <input class="bg-light form-control border-0 small" type="text"
                                                 placeholder="Search for products ...">
                                             <div class="input-group-append">
-                                                <button class="btn btn-primary bg-gradient-custom py-0"
-                                                    style="border: 0px;" type="button">
+                                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;" type="button">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -152,67 +149,16 @@
     <!-- Custom scripts -->
     <script type="text/javascript">
 
-        // ==============================  Helper Functions  ==============================
-
-        // Function to create a marker layer from a GeoJson object 
-        function createStoreLayer(geoJson) {
-            let layer = L.geoJSON(geoJson, {
-                pointToLayer: function (feature, latlng) {
-                    let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
-                    return L.marker(latlng, {
-                        opacity: marker_opacity,
-                        icon: storeIcon
-                    });
-                },
-                onEachFeature: function (feature, layer) {
-                    let storeLabel = (feature.properties.name == null) ? "Unknown" : feature.properties.name;
-
-                    // Click event
-                    layer.on('click', () => { });
-
-                    // Mouseover and mouseout events
-                    // Mouseover and mouseout events
-                    layer.on('mouseover', () => {
-                        layer.openPopup();
-                    });
-                    layer.on('mouseout', () => {
-                        layer.closePopup();
-                    });
-                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0,-12) });
-                }
-            });
-            return layer;
-        }
-
-        // ========================= Initialization Functions =========================
-
-        function initializeUserLocation(userLocation, userMarker) {
-            // Initialize geolocation
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    userLocation.lat = position.coords.latitude;
-                    userLocation.lng = position.coords.longitude;
-                    userMarker.setLatLng(userLocation);
-                    map.setView(userLocation, 18);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
         // ============================  Fetch Functions  ============================
 
         async function fetchAPI(url, method, data = {}) {
-            const requestOptions = {
+            return await fetch(url, {
                 method: method,
                 headers: {
                     "Content-Type": "application/json",
                 },
-            };
-            if (method !== "GET") {
-                requestOptions.body = JSON.stringify(data);
-            }
-            return await fetch(url, requestOptions)
+                body: JSON.stringify(data),
+            })
                 .then(response => response.json())
                 .catch(error => {
                     console.error(error);
@@ -220,69 +166,38 @@
                 });
         }
 
-        // Function to search for stores by name
-        function searchStoresByName(storeName) {
-            return fetchAPI(`/api/stores/search/${storeName}`, "GET");
-        }
-
-        // Function to search for stores by category
-        function searchStoresByCategory(categoryId) {
-            return fetchAPI(`/api/stores/categories/${categoryId}`, "GET");
-        }
 
         // ==============================  Execute Logic  ==============================
 
-        let categories = fetchAPI("/api/categories", "GET");
-        let stores = fetchAPI("/api/stores", "GET");
-
         // Create custom marker icons
-         const userIcon = L.icon({
-            iconUrl: '/img/street-view.svg',
+        const userIcon = L.icon({
+            html: '<i class="fa-solid fa-circle-dot fa-beat"></i>',
             className: 'fa-icon',
-            iconSize: [40, 40],
-            iconAnchor: [20, 30],
+            iconSize: [42, 42],
+            iconAnchor: [4, 24],
         });
 
-        const storeIcon = L.icon({
-            iconUrl: '/img/location-dot.svg',
+        const marketIcon = L.icon({
+            html: '<i class="fa-solid fa-location-dot"></i>',
             className: 'fa-icon',
-            iconSize: [36, 36],
-            iconAnchor: [18, 26],
+            iconSize: [38, 38],
+            iconAnchor: [4, 24],
         });
 
         // Initialize map, markers, locations & layers
-        let storesMarkers = null, storesFilteredMarkers = null;
-        
-        // Access needed DOM elements:
-        accordionSidebar = document.getElementById("accordionSidebar");
-        userName = document.getElementById("username_span");
-        
         const startLocation = { lat: 38.24638, lng: 21.73505 };
-        const map = L.map('map', { zoomControl: false }).setView(startLocation, 18);
+        let userLocation = { lat: null, lng: null };
+        let userMarker = null, storesMarkers = null, storesFilteredMarkers = null;
+
+        const map = L.map('map',{zoomControl: false}).setView(startLocation, 15);
         var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
         });
         OpenStreetMap_HOT.addTo(map);
-        
-        // ===================== Stores =====================
-        // When stores load, for each one create a marker
-        stores.then((res) => {
-            if ((res) !== 'undefined' && res.features.length > 0) {
-                storesLayer = createStoreLayer(res);
-                storesLayer.addTo(map);
-            }
-        }).catch(error => {
-            console.error(error);
-        });
 
-        // ===================== User =====================
-        // Initialize geolocation and userMarker
-        let userLocation = { lat: null, lng: null };
-        let userMarker = L.marker(userLocation, { icon: userIcon }).addTo(map);
-        initializeUserLocation(userLocation, userMarker);
-        
-        </script>
+
+    </script>
 </body>
 
 </html>
