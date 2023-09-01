@@ -66,13 +66,15 @@
                                 <input class="bg-light form-control border-0 small" type="text"
                                     placeholder="Search for stores ...">
                                 <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i></button>
+                                    type="button"><i class="fas fa-search"></i>
+                                </button>
                             </div>
                             <div class="input-group">
                                 <input class="bg-light form-control border-0 small" type="text"
                                     placeholder="Search for products ...">
                                 <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i></button>
+                                    type="button"><i class="fas fa-search"></i>
+                                </button>
                             </div>
                         </form>
 
@@ -133,7 +135,12 @@
                     <!-- Inside here goes the content of the page that is being displayed -->
                     <div class="row">
                         <!-- Load the Map here -->
-                        <div id="map" style="height: 100vh;"></div>
+                        <div id="map" style="height: 100vh;">
+                            <button id="userLocationBtn" class="btn btn-primary location-btn bg-gradient-custom py-0"
+                                style="border: 0px;" type="button">
+                                <i class="fa-solid fa-compass"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,7 +185,7 @@
                     layer.on('mouseout', () => {
                         layer.closePopup();
                     });
-                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0,-12) });
+                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0, -12) });
                 }
             });
             return layer;
@@ -236,7 +243,7 @@
         let stores = fetchAPI("/api/stores", "GET");
 
         // Create custom marker icons
-         const userIcon = L.icon({
+        const userIcon = L.icon({
             iconUrl: '/img/street-view.svg',
             className: 'fa-icon',
             iconSize: [40, 40],
@@ -252,11 +259,12 @@
 
         // Initialize map, markers, locations & layers
         let storesMarkers = null, storesFilteredMarkers = null;
-        
+
         // Access needed DOM elements:
-        accordionSidebar = document.getElementById("accordionSidebar");
-        userName = document.getElementById("username_span");
-        
+        let accordionSidebar = document.getElementById("accordionSidebar");
+        let userName = document.getElementById("username_span");
+        let userLocationBtn = document.getElementById('userLocationBtn');
+
         const startLocation = { lat: 38.24638, lng: 21.73505 };
         const map = L.map('map', { zoomControl: false }).setView(startLocation, 18);
         var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -264,7 +272,7 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
         });
         OpenStreetMap_HOT.addTo(map);
-        
+
         // ===================== Stores =====================
         // When stores load, for each one create a marker
         stores.then((res) => {
@@ -281,8 +289,13 @@
         let userLocation = { lat: null, lng: null };
         let userMarker = L.marker(userLocation, { icon: userIcon }).addTo(map);
         initializeUserLocation(userLocation, userMarker);
-        
-        </script>
+
+        // ================ Event listeners ================
+        userLocationBtn.addEventListener('click', () => {
+            initializeUserLocation(userLocation, userMarker);
+        });
+
+    </script>
 </body>
 
 </html>

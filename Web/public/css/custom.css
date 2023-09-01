@@ -1,4 +1,13 @@
 .bg-gradient-custom {
   /* background-image: linear-gradient(to bottom , #d2938e, #e9cbb0) */
-  background-image: linear-gradient(to bottom , #b2c29d, #b2c29d)
+  background-image: linear-gradient(to bottom, #b2c29d, #b2c29d)
+}
+.location-btn {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  z-index: 1000;
+}
+.dropdown-menu {
+  z-index: 1200;
 }
