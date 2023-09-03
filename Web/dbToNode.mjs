@@ -154,11 +154,6 @@ export async function storesFromCategory(categoryId) {
   }
 }
 
-
-//select stores.id,stores.name,stores.lon,stores.lat,stores.sale_exists from categories inner join subcategories on categories.id = subcategories.categories_id inner join products on subcategories.id = products.subcategories_id inner join sales on products.id = sales.product_id inner join stores on stores.id = sales.store_id where categories.id = 1
-//select * from stores inner join sales on stores.id = sales.store_id
-//select * from sales inner join stores on stores.id = sales.store_id
-
 /*================================ Other ================================ */
 function jsonToGeoJson(input, format) {
 	const geojson = {

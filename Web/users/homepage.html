@@ -14,8 +14,10 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Google Fonts Roboto -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@100&family=Roboto&display=swap"
+        rel="stylesheet">
 
     <!-- Include Leaflet CSS file in the head section of your html Document -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -26,186 +28,160 @@
         </script>
 </head>
 
-<body id="page-top">
+<body id="page-top" style="margin: 0;">
     <!-- First Popper.js, then Bootstrap JS. In case Jquery is used It needs to be loaded first-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div id="wrapper">
-        <!-- The sidebar is a vertical panel that appears on the left-hand side of the screen. -->
-        <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-custom p-0 navbar-dark">
-            <div class="container-fluid d-flex flex-column p-0"><a
-                    class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-                    <div class="sidebar-brand-text mx-3" style="text-transform: none;"><span>
-                            <h2>haggle</h3>
-                        </span></div>
-                </a>
-                <hr class="sidebar-divider my-0">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <!-- <li class="nav-item"><a class="nav-link active" href="blank.html"><i
-                                class="fas fa-window-maximize"></i><span>Blank Page</span></a></li> -->
-                </ul>
-                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
-                        id="sidebarToggle" type="button"></button></div>
-            </div>
-        </nav>
-        <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
-                <!-- The topbar is a horizontal bar that appears on the top of the screen. -->
-                <nav class="navbar navbar-expand bg-white  topbar static-top navbar-light">
+    <section class="vh-100">
+        <div class="row h-100 d-flex flex-row">
+            <!-- Main page -->
+            <div class="col m-0 p-0">
+                <div style="flex-grow: 1;">
+                    <div class="d-flex flex-column">
+                        <div id="content">
+                            <!-- The topbar -->
+                            <nav class="navbar navbar-expand bg-white  topbar static-top navbar-light">
 
-                    <div class="container-fluid">
-                        <!-- The sidebar toggle button allows the user to show or hide the sidebar. -->
-                        <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop"
-                            type="button"><i class="fas fa-bars"></i></button>
-                        <!-- Search fields if window is large enough  -->
-                        <form class="me-auto mw-100 navbar-search d-sm-flex d-none">
-                            <div class="input-group" style="padding-right: 20px;">
-                                <input class="bg-light form-control border-0 small" type="text"
-                                    placeholder="Search for stores ...">
-                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                            <div class="input-group">
-                                <input class="bg-light form-control border-0 small" type="text"
-                                    placeholder="Search for products ...">
-                                <button class="btn btn-primary bg-gradient-custom py-0" style="border: 0px;"
-                                    type="button"><i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </form>
+                                <div class="container-fluid">
+                                    <!-- Logo and Name -->
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-location-dot fa-xl my-0"></i>
+                                        <h3 class="ml-2 mx-3 my-0">haggle: </h3>
+                                    </div>
 
-                        <ul class="navbar-nav flex-nowrap ms-auto">
-                            <!-- Search fields if window is small enough -->
-                            <li class="nav-item dropdown d-sm-none no-arrow">
-                                <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
-                                    href="#">
-                                    <i class="fas fa-search"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
-                                    aria-labelledby="searchDropdown">
-                                    <form class="me-auto navbar-search w-100">
-                                        <div class="input-group" style="padding-bottom: 20px;">
-                                            <input class="bg-light form-control border-0 small" type="text"
-                                                placeholder="Search for stores ...">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary bg-gradient-custom py-0"
-                                                    style="border: 0px;" type="button"><i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                    <!-- Search fields if window is large enough -->
+                                    <form class="me-auto mw-100 navbar-search d-sm-flex d-none">
+                                        <div class="input-group" style="padding-right: 20px;">
+                                            <input id="storeNameExtendedInput"
+                                                class="bg-light form-control border-0 small" type="text"
+                                                placeholder="Search for stores">
+                                            <button id="storeNameExtendedButton" class="btn btn-primary py-0"
+                                                style="border: 0px;" type="button"><i class="fas fa-search"></i>
+                                            </button>
                                         </div>
                                         <div class="input-group">
-                                            <input class="bg-light form-control border-0 small" type="text"
-                                                placeholder="Search for products ...">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary bg-gradient-custom py-0"
-                                                    style="border: 0px;" type="button">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                            <select id="storeCategoryExtendedInput"
+                                                class="form-select bg-light border-0 form-select-sm"
+                                                aria-label=".form-select-sm" readonly>
+                                                <option selected>Search for products</option>
+                                            </select>
+                                            <button id="storeCategoryExtendedButton" class="btn btn-primary py-0"
+                                                style="border: 0px;" type="button"><i class="fas fa-search"></i>
+                                            </button>
                                         </div>
                                     </form>
+
+                                    <ul class="navbar-nav flex-nowrap ms-auto">
+                                        <!-- Search fields if window is small enough -->
+                                        <li class="nav-item dropdown d-sm-none no-arrow">
+                                            <a class="dropdown-toggle nav-link" aria-expanded="false"
+                                                data-bs-toggle="dropdown" href="#">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
+                                                aria-labelledby="searchDropdown">
+                                                <form class="me-auto navbar-search w-100">
+                                                    <div class="input-group" style="padding-bottom: 20px;">
+                                                        <input id="storeNameCollapsedInput"
+                                                            class="bg-light form-control border-0 small" type="text"
+                                                            placeholder="Search for stores">
+                                                        <div class="input-group-append">
+                                                            <button id="storeNameCollapsedButton"
+                                                                class="btn btn-primary bg-custom-green py-0"
+                                                                style="border: 0px;" type="button"><i
+                                                                    class="fas fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <select id="storeCategoryCollapsedInput"
+                                                            class="form-select bg-light border-0 form-select-sm"
+                                                            aria-label=".form-select-sm" readonly>
+                                                            <option selected>Search for products</option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button id="storeCategoryCollapsedButton"
+                                                                class="btn btn-primary bg-custom-green py-0"
+                                                                style="border: 0px;" type="button">
+                                                                <i class="fas fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </li>
+                                        <div class="d-none d-sm-block topbar-divider"></div>
+                                        <!-- Nav Item - User Information -->
+                                        <li class="nav-item dropdown no-arrow">
+                                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                                    aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                                        id="username_span"
+                                                        class="d-none d-lg-inline me-2 text-gray-600 small">Username</span><i
+                                                        class="fa-solid fa-address-card"></i></a>
+                                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
+                                                        class="dropdown-item" href="#"><i
+                                                            class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
+                                                        class="dropdown-item" href="#"><i
+                                                            class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
+                                                    <div class="dropdown-divider"></div><a class="dropdown-item"
+                                                        href="#" onclick="logout()"><i
+                                                            class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </li>
-                            <div class="d-none d-sm-block topbar-divider"></div>
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
-                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
-                                            id="username_span"
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">Username</span><i
-                                            class="fa-solid fa-address-card"></i></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                            </nav>
+                            <div class="container-fluid" style="padding: 0;">
+                                <!-- Map -->
+                                <div id="map" style="height: 100vh; position: relative;">
+                                    <div class="map-utils d-flex flex-column">
+                                        <button id="focusUserLocationBtn" class="btn btn-primary py-0" style="border: 0px;"
+                                            type="button">
+                                            <i class="fa-solid fa-compass fa-lg" style="color: white;"></i>
+                                        </button>
+                                        <button id="changeUserLocationBtn" class="btn btn-primary py-0" style="border: 0px; margin-top: 5px;" id="sidebarToggleTop" type="button">
+                                            <i class="fas fa-map-location-dot fa-lg" style="color: white;"></i>
+                                        </button>
+                                    </div>
+                                    <!-- Card Information -->
+                                    <div id="card_info" class="card map-info col-lg-4 col-md-5 col-8 d-none" style="border-radius: 1rem;">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-solid fa-shop fa-lg"></i>
+                                                <h4 id="card_storeName" class="ml-2 mx-3 my-0">Store</h4>
+                                            </div>
+                                            <button id="card_closeBtm" class="btn btn-primary py-0 justify-content-right"
+                                                style="border: 0px;" id="cardClose" type="button">
+                                                <i class="fas fa-xmark fa-sm" style="color: white;"></i>
+                                            </button>
+                                        </div>
+                                        <div id="card_body" class="card-body">
+
+                                        </div>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-                <div class="container-fluid" style="padding: 0%;">
-                    <!-- Inside here goes the content of the page that is being displayed -->
-                    <div class="row">
-                        <!-- Load the Map here -->
-                        <div id="map" style="height: 100vh;">
-                            <button id="userLocationBtn" class="btn btn-primary location-btn bg-gradient-custom py-0"
-                                style="border: 0px;" type="button">
-                                <i class="fa-solid fa-compass"></i>
-                            </button>
+                            </div>
+                            <footer class="bg-white sticky-footer">
+                                <div class="container my-auto">
+                                    <div class="text-center my-auto copyright"><span>Copyright © haggle 2023</span>
+                                    </div>
+                                </div>
+                            </footer>
+                            <!-- Button to scroll to top of page -->
                         </div>
+                        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i
+                                class="fas fa-angle-up"></i></a>
                     </div>
                 </div>
             </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © haggle 2023</span></div>
-                </div>
-            </footer>
-            <!-- Button to scroll to top of page -->
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
+    </section>
 
     <!-- Bootstrap -->
     <script src="/js/script.min.js"></script>
 
     <!-- Custom scripts -->
     <script type="text/javascript">
-
-        // ==============================  Helper Functions  ==============================
-
-        // Function to create a marker layer from a GeoJson object 
-        function createStoreLayer(geoJson) {
-            let layer = L.geoJSON(geoJson, {
-                pointToLayer: function (feature, latlng) {
-                    let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
-                    return L.marker(latlng, {
-                        opacity: marker_opacity,
-                        icon: storeIcon
-                    });
-                },
-                onEachFeature: function (feature, layer) {
-                    let storeLabel = (feature.properties.name == null) ? "Unknown" : feature.properties.name;
-
-                    // Click event
-                    layer.on('click', () => { });
-
-                    // Mouseover and mouseout events
-                    // Mouseover and mouseout events
-                    layer.on('mouseover', () => {
-                        layer.openPopup();
-                    });
-                    layer.on('mouseout', () => {
-                        layer.closePopup();
-                    });
-                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0, -12) });
-                }
-            });
-            return layer;
-        }
-
-        // ========================= Initialization Functions =========================
-
-        function initializeUserLocation(userLocation, userMarker) {
-            // Initialize geolocation
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    userLocation.lat = position.coords.latitude;
-                    userLocation.lng = position.coords.longitude;
-                    userMarker.setLatLng(userLocation);
-                    map.setView(userLocation, 18);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
 
         // ============================  Fetch Functions  ============================
 
@@ -227,43 +203,18 @@
                 });
         }
 
-        // Function to search for stores by name
-        function searchStoresByName(storeName) {
-            return fetchAPI(`/api/stores/search/${storeName}`, "GET");
-        }
+        // =============================  Helper Functions  =============================
 
-        // Function to search for stores by category
-        function searchStoresByCategory(categoryId) {
-            return fetchAPI(`/api/stores/categories/${categoryId}`, "GET");
+        // Function to clear children elements of a DOM element
+        function clearChildrenElements(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
         }
 
         // ==============================  Execute Logic  ==============================
 
-        let categories = fetchAPI("/api/categories", "GET");
         let stores = fetchAPI("/api/stores", "GET");
-
-        // Create custom marker icons
-        const userIcon = L.icon({
-            iconUrl: '/img/street-view.svg',
-            className: 'fa-icon',
-            iconSize: [40, 40],
-            iconAnchor: [20, 30],
-        });
-
-        const storeIcon = L.icon({
-            iconUrl: '/img/location-dot.svg',
-            className: 'fa-icon',
-            iconSize: [36, 36],
-            iconAnchor: [18, 26],
-        });
-
-        // Initialize map, markers, locations & layers
-        let storesMarkers = null, storesFilteredMarkers = null;
-
-        // Access needed DOM elements:
-        let accordionSidebar = document.getElementById("accordionSidebar");
-        let userName = document.getElementById("username_span");
-        let userLocationBtn = document.getElementById('userLocationBtn');
 
         const startLocation = { lat: 38.24638, lng: 21.73505 };
         const map = L.map('map', { zoomControl: false }).setView(startLocation, 18);
@@ -273,27 +224,288 @@
         });
         OpenStreetMap_HOT.addTo(map);
 
+        // Layer Group to store markers. This is important because the layer can be cleared in an instant
+        const storesMarkersLayerGroup = L.layerGroup().addTo(map);
+
         // ===================== Stores =====================
-        // When stores load, for each one create a marker
+
+        const storeIcon = L.icon({
+            iconUrl: '/img/location-dot.svg',
+            className: 'fa-icon',
+            iconSize: [36, 36],
+            iconAnchor: [18, 26],
+        });
+
+        let storesMarkerLayer = null
         stores.then((res) => {
             if ((res) !== 'undefined' && res.features.length > 0) {
                 storesLayer = createStoreLayer(res);
-                storesLayer.addTo(map);
+                storesMarkersLayerGroup.addLayer(storesLayer);
             }
         }).catch(error => {
             console.error(error);
         });
 
+        // Fetch information about a store by its ID
+        function fetchStoreSalesById(storeId) {
+            return fetchAPI(`/api/stores/${storeId}`, "GET");
+        }
+
+        // Function to create a marker layer from a GeoJson object 
+        function createStoreLayer(geoJson) {
+            let layer = L.geoJSON(geoJson, {
+                pointToLayer: function (feature, latlng) {
+                    let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
+                    return L.marker(latlng, {
+                        opacity: marker_opacity,
+                        icon: storeIcon
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    let storeLabel = (feature.properties.name || "Unknown");
+
+                    // Click event
+                    layer.on('click', () => {
+                        const storeSales = fetchStoreSalesById(feature.properties.id);
+
+                        storeSales.then((res) => {
+                            if (typeof res !== 'undefined') {
+                                // Display the store info 
+                                displayStoreInfoInCard(feature.properties, res);
+                            }
+                        }).catch(error => {
+                            console.error('Error fetching store information: ', error);
+                        });
+                    });
+
+                    // Mouseover and mouseout events
+                    // Mouseover and mouseout events
+                    layer.on('mouseover', () => {
+                        layer.openPopup();
+                    });
+                    layer.on('mouseout', () => {
+                        layer.closePopup();
+                    });
+                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0, -12) });
+                }
+            });
+            return layer;
+        }
+
+        // ============== Display Store Info ==============
+
+        // Access needed DOM elements:
+        const card_info = document.getElementById('card_info');
+        const card_storeName = document.getElementById('card_storeName');
+        const card_body = document.getElementById('card_body');
+        
+        // Function to display the store info in the sidebar
+        function displayStoreInfoInCard(storeInfo, storeSales) {
+            
+            // Clear the previous information
+            clearChildrenElements(card_body);
+            
+            // Check if display element is hidden and if so, show it
+            if (card_info.classList.contains('d-none')) {
+                card_info.classList.remove('d-none');
+            }
+            
+            // Add the store name to the sidebar
+            const storeName = (storeInfo.name || 'Unknown');
+            card_storeName.textContent = storeName;
+            
+            // Display sales if available in storeSales
+            if (storeSales && storeSales.length > 0) {
+                const salesList = document.createElement('ul');
+                storeSales.forEach(sale => {
+                    const saleItem = document.createElement('li');
+                    saleItem.textContent = sale.name;
+                    saleItem.addEventListener('click', () => {
+                        // placeholder:
+                        console.log(sale)
+                        // Fetch and display detailed sale information
+                        //fetchSaleDetails(sale);
+                    });
+                    salesList.appendChild(saleItem);
+                });
+                
+                // Add the list of sales to the sidebar
+                card_body.appendChild(salesList);
+            }
+        }
+        
+        // Close card button event listener
+        const card_closeBtn = document.getElementById('card_closeBtm');
+        card_closeBtn.addEventListener('click', () => {
+            card_info.classList.add('d-none');
+        });
+
         // ===================== User =====================
+
+        // Create custom marker icons
+        const userIcon = L.icon({
+            iconUrl: '/img/street-view.svg',
+            className: 'fa-icon',
+            iconSize: [40, 40],
+            iconAnchor: [20, 30],
+        });
+
         // Initialize geolocation and userMarker
         let userLocation = { lat: null, lng: null };
         let userMarker = L.marker(userLocation, { icon: userIcon }).addTo(map);
         initializeUserLocation(userLocation, userMarker);
 
-        // ================ Event listeners ================
-        userLocationBtn.addEventListener('click', () => {
+        function initializeUserLocation(userLocation, userMarker) {
+            // Initialize geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    userLocation.lat = position.coords.latitude;
+                    userLocation.lng = position.coords.longitude;
+                    userMarker.setLatLng(userLocation);
+                    map.setView(userLocation, 18);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Locate User Button Event Listener
+        const focusUserLocationBtn= document.getElementById('focusUserLocationBtn');
+        focusUserLocationBtn.addEventListener('click', () => {
             initializeUserLocation(userLocation, userMarker);
         });
+
+        // ===================== Search Stores =====================
+
+        // Access needed DOM elements:
+        const storeNameExtendedButton = document.getElementById('storeNameExtendedButton');
+        const storeNameExtendedInput = document.getElementById('storeNameExtendedInput');
+        const storeNameCollapsedButton = document.getElementById('storeNameCollapsedButton');
+        const storeNameCollapsedInput = document.getElementById('storeNameCollapsedInput');
+
+        // Search by name
+        function filterStoresByName(searchText) {
+            // Remove the existing markers from the map
+            storesMarkersLayerGroup.clearLayers();
+
+            // Filter the stores based on their name
+            stores.then((res) => {
+                if (typeof res !== 'undefined' && res.features.length > 0) {
+
+                    // Check if searchText is empty and if so, return all stores
+                    if (!searchText && (storesLayer !== null)) {
+                        storesMarkersLayerGroup.addLayer(storesLayer);
+                        return;
+                    }
+
+                    let storesFilteredLayer = createStoreLayer({
+                        type: "FeatureCollection",
+                        features: res.features.filter(store => {
+                            const storeName = (store.properties.name || 'Unknown').toLowerCase();
+                            return storeName.includes(searchText);
+                        })
+                    });
+
+                    // Add the filtered markers to the map
+                    storesMarkersLayerGroup.addLayer(storesFilteredLayer);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // Add event listeners to the search buttons
+        storeNameExtendedButton.addEventListener('click', () => {
+            filterStoresByName(storeNameExtendedInput.value.toLowerCase());
+        });
+        storeNameCollapsedButton.addEventListener('click', () => {
+            filterStoresByName(storeNameCollapsedInput.value.toLowerCase());
+        });
+
+        // ===================== Search Products =====================
+
+        // Access needed DOM elements:
+        const storeCategoryExtendedButton = document.getElementById('storeCategoryExtendedButton');
+        const storeCategoryExtendedInput = document.getElementById('storeCategoryExtendedInput');
+        const storeCategoryCollapsedButton = document.getElementById('storeCategoryCollapsedButton');
+        const storeCategoryCollapsedInput = document.getElementById('storeCategoryCollapsedInput');
+
+        let categories = fetchAPI("/api/categories", "GET");
+
+        // For each category add a new option to the select element
+        categories.then((res) => {
+            if (typeof res !== 'undefined' && res.length > 0) {
+                res.forEach(category => {
+                    let option = document.createElement("option");
+                    option.value = category.id;
+                    option.text = category.name;
+                    storeCategoryExtendedInput.add(option);
+                    storeCategoryCollapsedInput.add(option.cloneNode(true));
+                });
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
+        // Search by category
+        function filterStoresByCategory(categoryId) {
+
+            // Remove the existing markers from the map
+            storesMarkersLayerGroup.clearLayers();
+
+            // Check if categoryId is empty and if so, return all stores
+            if (categoryId == 'Search for products') {
+                storesMarkersLayerGroup.addLayer(storesLayer);
+                return;
+            }
+
+            // Fetch the filtered stores based on the Catergory ID
+            let storesFiltered = fetchAPI(`/api/stores/categories/${categoryId}`, "GET");
+
+            // Filter the stores based on their category
+            storesFiltered.then((res) => {
+                if (typeof res !== 'undefined' && res.features.length > 0) {
+                    let storesFilteredLayer = createStoreLayer(res);
+
+                    // Add the filtered markers to the map
+                    storesMarkersLayerGroup.addLayer(storesFilteredLayer);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // Add an event listener to the filter buttons 
+        storeCategoryExtendedButton.addEventListener('click', () => {
+            filterStoresByCategory(storeCategoryExtendedInput.value);
+        });
+
+        storeCategoryCollapsedButton.addEventListener('click', () => {
+            filterStoresByCategory(storeCategoryCollapsedInput.value);
+        });
+
+        // ===================== Logout =====================
+
+        function logout() {
+            // Make a GET request to the logout route on the server
+            fetch('/users/logout', {
+                method: 'GET',
+                credentials: 'include', // Include credentials (cookies) in the request
+                redirect: 'follow'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Logout successful');
+                        window.location.href = '/login.html';
+                    } else {
+                        // Handle logout failure, e.g., by displaying an error message
+                        console.error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during server logout:', error);
+                });
+        }
 
     </script>
 </body>

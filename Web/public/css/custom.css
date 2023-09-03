@@ -1,13 +1,40 @@
-.bg-gradient-custom {
-  /* background-image: linear-gradient(to bottom , #d2938e, #e9cbb0) */
-  background-image: linear-gradient(to bottom, #b2c29d, #b2c29d)
+.bg-custom-green {
+  background-color: #b2c29d;
 }
-.location-btn {
+
+.btn-primary {
+  background-color: #b2c29d;
+  border-color: #b2c29d;
+}
+
+.btn-primary:hover {
+  background-color: #e2e5c5;
+  border-color: #e2e5c5;
+}
+
+
+.map-utils {
   position: absolute;
   top: 20px;
   right: 40px;
   z-index: 1000;
 }
+
+.map-info {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  height: auto;
+  max-height: 80%;
+  max-width: 80%;
+  z-index: 1000;
+  background-color: #e2e5c5;
+}
+
 .dropdown-menu {
   z-index: 1200;
+}
+
+.form-select.form-select-sm {
+    font-size: 12px; /* Adjust the font size as needed */
 }

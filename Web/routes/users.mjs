@@ -22,3 +22,9 @@ routerUsers.get('/info', (req, res) => {
   // Insert  code here later
   
 });
+
+routerUsers.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.clearCookie('authToken');
+  res.redirect('/login.html');
+});

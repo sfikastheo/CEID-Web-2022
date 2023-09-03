@@ -1,9 +1,7 @@
 'use strict';
 
 import * as url from 'url';
-import { Mariadb } from "./mariadb.mjs";
-const mariadb = await Mariadb.createConnection();
+import { storeInfo } from './dbToNode.mjs';
 
-
-const __basename = url.fileURLToPath(new URL('..', import.meta.url));
-console.log(__basename);
+let stores = await storeInfo(1);
+console.log(stores);
