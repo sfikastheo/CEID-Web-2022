@@ -52,10 +52,7 @@ export async function registerUser(username, email, password) {
 		await mariadb.paramQuery(insertUserQuery, [username, email, hashedPassword]);
 		
 		// Commit the changes
-    const commitResult = await mariadb.commit();
-		if ( typeof(commitResult) == 'undefined') {
-			return { success: false, message: 'An internal error occurred, make sure the username is under 25 characters long and the email under 40' };
-		}
+    await mariadb.commit();
 
 		return { success: true };
 	} catch (error) {

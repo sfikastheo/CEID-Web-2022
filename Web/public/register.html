@@ -96,7 +96,7 @@
     // regex of email:
     const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // regex of password: at least 8 letters, 1 uppercase, 1 number:
-    const password_regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/gm;
+    const password_regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
 
     document.addEventListener("DOMContentLoaded", function () {
       const registerButton = document.getElementById("register_button");
@@ -113,7 +113,7 @@
           return;
         }
 
-        if (!email_regex.test(emailInput.value)) {
+        if (!email_regex.test(emailInput.value.trim())) {
           alert("Please enter a valid email address.");
 
           // Clear the email field
@@ -121,7 +121,7 @@
           return;
         }
 
-        if (!password_regex.test(passwordInput.value)) {
+        if (!password_regex.test(passwordInput.value.trim())) {
           alert("Please provide a valid password. Password must contain at least 8 characters and an uppercase letter, a number and a special character.");
 
           // Clear the password fields
@@ -131,7 +131,7 @@
         }
 
         // All fields are filled, Check if passwords match
-        if (passwordInput.value != password2Input.value) {
+        if (passwordInput.value.trim() != password2Input.value.trim()) {
           alert("Passwords do not match.");
 
           // Clear the password fields
@@ -142,34 +142,14 @@
 
         // All checks passed, proceed with sending the form data
         const formData = {
-          name: nameInput.value,
-          email: emailInput.value,
-          password: passwordInput.value,
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          password: passwordInput.value.trim(),
         };
 
         // Send the data to the backend using Ajax
         sendData(formData);
       });
-
-      function sendData(data) {
-        // Perform Ajax request here
-        // Example using fetch():
-        fetch("/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            // Handle response from the backend
-            console.log(result);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
 
       function sendData(data) {
         fetch("/api/register", {
@@ -192,8 +172,6 @@
               alert(result.message);
 
               // Clear the fields
-              nameInput.value = '';
-              emailInput.value = '';
               passwordInput.value = '';
               password2Input.value = '';
             }

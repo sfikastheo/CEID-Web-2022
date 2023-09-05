@@ -28,12 +28,13 @@
         </script>
 </head>
 
-<body id="page-top" style="margin: 0;">
+<body id="page-top"">
     <!-- First Popper.js, then Bootstrap JS. In case Jquery is used It needs to be loaded first-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
 
     <section class="vh-100">
-        <div class="row h-100 d-flex flex-row">
+        <div class="row h-100 m-0 p-0 d-flex flex-row">
             <!-- Main page -->
             <div class="col m-0 p-0">
                 <div style="flex-grow: 1;">
@@ -44,7 +45,7 @@
 
                                 <div class="container-fluid">
                                     <!-- Logo and Name -->
-                                    <div class="d-flex justify-content-center align-items-center">
+                                    <div class="d-flex justify-content-center align-items-center ml-4">
                                         <i class="fa-solid fa-location-dot fa-xl my-0"></i>
                                         <h3 class="ml-2 mx-3 my-0">haggle: </h3>
                                     </div>
@@ -136,45 +137,109 @@
                                 <!-- Map -->
                                 <div id="map" style="height: 100vh; position: relative;">
                                     <div class="map-utils d-flex flex-column">
-                                        <button id="focusUserLocationBtn" class="btn btn-primary py-0" style="border: 0px;"
-                                            type="button">
+                                        <button id="focusUserLocationBtn" class="btn btn-primary py-0"
+                                            style="border: 0px;" type="button">
                                             <i class="fa-solid fa-compass fa-lg" style="color: white;"></i>
                                         </button>
-                                        <button id="changeUserLocationBtn" class="btn btn-primary py-0" style="border: 0px; margin-top: 5px;" id="sidebarToggleTop" type="button">
+                                        <button id="changeUserLocationBtn" class="btn btn-primary py-0"
+                                            style="border: 0px; margin-top: 5px;" id="sidebarToggleTop" type="button">
                                             <i class="fas fa-map-location-dot fa-lg" style="color: white;"></i>
                                         </button>
                                     </div>
                                     <!-- Card Information -->
-                                    <div id="card_info" class="card map-info col-lg-4 col-md-5 col-8 d-none" style="border-radius: 1rem;">
+                                    <div id="card_info" class="card map-info col-xl-4 col-lg-5 col-md-9 col-12 d-none"
+                                        style="border-radius: 1rem;">
                                         <div class="card-header d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
                                                 <i class="fa-solid fa-shop fa-lg"></i>
                                                 <h4 id="card_storeName" class="ml-2 mx-3 my-0">Store</h4>
                                             </div>
-                                            <button id="card_closeBtm" class="btn btn-primary py-0 justify-content-right"
-                                                style="border: 0px;" id="cardClose" type="button">
-                                                <i class="fas fa-xmark fa-sm" style="color: white;"></i>
-                                            </button>
+                                            <div class="div justify-content-right">
+                                                <!-- Add Sale Button -->
+                                                <button id="card_addSaleBtm" class="btn btn-primary px-2 d-none"
+                                                    style="border: 0px;" type="button">
+                                                    <i class="fas fa-plus fa-sm" style="color: white;"></i>
+                                                </button>
+                                                <!-- Back to SalesList Button -->
+                                                <button id="card_backBtm" class="btn btn-primary px-2 d-none"
+                                                    style="border: 0px;" type="button">
+                                                    <i class="fas fa-solid fa-circle-left fa-sm"
+                                                        style="color: white;"></i>
+                                                </button>
+                                                <!-- Close Card Button -->
+                                                <button id="card_closeBtm" class="btn btn-primary px-2"
+                                                    style="border: 0px;" type="button">
+                                                    <i class="fas fa-xmark fa-sm" style="color: white;"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div id="card_body" class="card-body">
-
+                                        <div id="card_body" class="card-body"
+                                            style="max-height: 100%; overflow-y: auto;">
+                                            <!-- Sale List -->
+                                            <div id="card_salesList">
+                                                <!-- This gets filled dynamically -->
+                                            </div>
+                                            <div id="card_detailedSale" class="d-none">
+                                                <!-- Detailed Sale Information -->
+                                                <div class="row p-0 m-0 g-0">
+                                                    <h6 id="cardDetails_productName">Product Name</h6>
+                                                    <div class="col d-md-block m-4">
+                                                        <!-- Product Image -->
+                                                        <div id="cardDetails_productImage" class="background-image-container"
+                                                            style= "background-size: cover; background-position: center center; width: 100%; height: 100%; border-radius: 1rem 0 0 1rem;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <!-- Product Information -->
+                                                        <ul style="font-size: 16px;">
+                                                            <li>Price: <span id="cardDetails_productPrice"></span></li>
+                                                            <li>In stock: <input id="cardDetails_stockToggle"
+                                                                    type="checkbox" class="form-check-input" value="">
+                                                            </li>
+                                                            <li>Special offer:
+                                                                <i id="cardDetails_specialOfferIcon"
+                                                                    class="fa-solid fa-star fa-sm"></i>
+                                                                <span id="cardDetails_specialOfferText"></span>
+                                                            </li>
+                                                            <li>Submitted By: <span id="cardDetails_submittedBy"></span>
+                                                            </li>
+                                                            <li>Submission Date: <span
+                                                                    id="cardDetails_submissionDate"></span>
+                                                            </li>
+                                                            <li>User's Score: <span
+                                                                    id="cardDetails_submittedByUserScore"></span>
+                                                            </li>
+                                                            <div class="d-flex mt-2" style="font-size: 12px;" >
+                                                                <button id="cardDetails_likeBtn"
+                                                                    class="btn btn-primary" style="border: 0px;"
+                                                                    type="button">
+                                                                </button>
+                                                                <button id="cardDetails_dislikeBtn"
+                                                                    class="btn btn-danger" style="border: 0px; margin-left: 2px;"
+                                                                    type="button">
+                                                                </button>
+                                                            </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <footer class="bg-white sticky-footer">
+                                    <div class="container my-auto">
+                                        <div class="text-center my-auto copyright"><span>Copyright © haggle 2023</span>
+                                        </div>
+                                    </div>
+                                </footer>
+                                <!-- Button to scroll to top of page -->
                             </div>
-                            <footer class="bg-white sticky-footer">
-                                <div class="container my-auto">
-                                    <div class="text-center my-auto copyright"><span>Copyright © haggle 2023</span>
-                                    </div>
-                                </div>
-                            </footer>
-                            <!-- Button to scroll to top of page -->
+                            <a class="border rounded d-inline scroll-to-top" href="#page-top"><i
+                                    class="fas fa-angle-up"></i></a>
                         </div>
-                        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i
-                                class="fas fa-angle-up"></i></a>
                     </div>
                 </div>
-            </div>
     </section>
 
     <!-- Bootstrap -->
@@ -188,6 +253,7 @@
         async function fetchAPI(url, method, data = {}) {
             const requestOptions = {
                 method: method,
+                redirect: 'follow',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -210,6 +276,23 @@
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
             }
+        }
+
+        // Function to calculate distance between two coordinates using Haversine formula
+        function calculateDistance(lon1, lat1, lon2, lat2) {
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) *
+                Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in km
+            const meters = distance * 1000; // Convert to meters
+            return meters;
         }
 
         // ==============================  Execute Logic  ==============================
@@ -271,7 +354,7 @@
                         storeSales.then((res) => {
                             if (typeof res !== 'undefined') {
                                 // Display the store info 
-                                displayStoreInfoInCard(feature.properties, res);
+                                displayStoreInfoInCard(feature, res);
                             }
                         }).catch(error => {
                             console.error('Error fetching store information: ', error);
@@ -295,45 +378,280 @@
         // ============== Display Store Info ==============
 
         // Access needed DOM elements:
+        // Sales List
         const card_info = document.getElementById('card_info');
+        const card_salesList = document.getElementById('card_salesList');
+        const card_detailedSale = document.getElementById('card_detailedSale');
         const card_storeName = document.getElementById('card_storeName');
-        const card_body = document.getElementById('card_body');
-        
+        const card_addSaleBtm = document.getElementById('card_addSaleBtm');
+        const card_backBtm = document.getElementById('card_backBtm');
+
         // Function to display the store info in the sidebar
         function displayStoreInfoInCard(storeInfo, storeSales) {
-            
+
             // Clear the previous information
-            clearChildrenElements(card_body);
-            
-            // Check if display element is hidden and if so, show it
+            clearChildrenElements(card_salesList);
+
+            // Show the card
             if (card_info.classList.contains('d-none')) {
                 card_info.classList.remove('d-none');
             }
-            
+
+            // Show the sales list
+            card_salesList.classList.remove('d-none');
+            // Hide everything else 
+            card_backBtm.classList.add('d-none');
+            card_detailedSale.classList.add('d-none');
+
             // Add the store name to the sidebar
-            const storeName = (storeInfo.name || 'Unknown');
+            const storeName = (storeInfo.properties.name || 'Unknown');
             card_storeName.textContent = storeName;
-            
+
+            distanceWithUser = calculateDistance(userLocation.lng, userLocation.lat,
+                storeInfo.geometry.coordinates[0], storeInfo.geometry.coordinates[1]);
+
+            // If distance < 50 show add sale button else hide it
+            if (distanceWithUser < 50) {
+                card_addSaleBtm.classList.remove('d-none');
+            } else {
+                card_addSaleBtm.classList.add('d-none');
+            }
+
             // Display sales if available in storeSales
             if (storeSales && storeSales.length > 0) {
-                const salesList = document.createElement('ul');
                 storeSales.forEach(sale => {
-                    const saleItem = document.createElement('li');
-                    saleItem.textContent = sale.name;
-                    saleItem.addEventListener('click', () => {
-                        // placeholder:
-                        console.log(sale)
-                        // Fetch and display detailed sale information
-                        //fetchSaleDetails(sale);
+                    const saleItem = document.createElement('div');
+                    saleItem.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+
+                    // Sale left
+                    const saleLeft = document.createElement('div');
+                    // Check if criteria are matched and add a star
+                    if (sale.criteria_ok) {
+                        const starIcon = document.createElement('i');
+                        starIcon.classList.add('fa-solid', 'fa-star');
+                        starIcon.style.marginRight = '8px';
+                        saleLeft.appendChild(starIcon);
+                    } else {
+                        const dotIcon = document.createElement('i');
+                        dotIcon.classList.add('fa-solid', 'fa-circle', 'fa-2xs');
+                        dotIcon.style.marginRight = '8px';
+                        saleLeft.appendChild(dotIcon);
+                    }
+
+                    // Sale Name
+                    const saleName = document.createElement('span');
+                    saleName.textContent = sale.name;
+                    saleName.classList.add('sale-name');
+                    saleName.addEventListener('mouseenter', () => {
+                        saleName.style.textDecoration = 'underline';
                     });
-                    salesList.appendChild(saleItem);
+                    saleName.addEventListener('mouseleave', () => {
+                        saleName.style.textDecoration = 'none';
+                    });
+                    saleName.addEventListener('click', () => {
+                        displaySaleInfoInCard(sale);
+                    });
+
+                    saleName.style.pointerEvents = 'none';
+
+                    // Sale Price
+                    const salePrice = document.createElement('span');
+                    salePrice.textContent = `${sale.price}€`;
+                    salePrice.classList.add('fw-bold');
+                    salePrice.style.marginLeft = '12px';
+
+                    // Update elements functionality based on user distance
+                    if (distanceWithUser < 50) {
+                        saleName.style.pointerEvents = 'auto';
+                        card_addSaleBtm.classList.remove('d-none');
+                    }
+
+                    const enabled = sale.stock && (distanceWithUser < 50);
+                    const likeDislikeButtonsContainer = createLikeDislikeButtons(sale, enabled);
+
+                    // Append the elements to the sale item
+                    // Sale Left
+                    saleLeft.appendChild(saleName);
+                    saleLeft.appendChild(salePrice);
+                    // Check if stock is available and add a stock icon
+                    if (sale.stock) {
+                        const stockIcon = document.createElement('i');
+                        stockIcon.classList.add('fa-solid', 'fa-cubes');
+                        stockIcon.style.marginLeft = '4px';
+                        saleLeft.appendChild(stockIcon);
+                    }
+
+                    // saleItem
+                    saleItem.appendChild(saleLeft);
+                    saleItem.appendChild(likeDislikeButtonsContainer);
+
+                    // Append the sale item to the sales list 
+                    card_salesList.appendChild(saleItem);
                 });
-                
-                // Add the list of sales to the sidebar
-                card_body.appendChild(salesList);
             }
         }
-        
+
+        function createLikeDislikeButtons(sale, enabled) {
+            const container = document.createElement('div');
+            container.classList.add('d-flex', 'align-items-center');
+
+            const likeButton = document.createElement('button');
+            likeButton.type = 'button'; // Use button type
+            likeButton.classList.add('btn', 'btn-primary', 'py-0', 'px-2');
+            likeButton.style.marginRight = '4px';
+            likeButton.style.fontSize = '12px';
+            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+
+            const dislikeButton = document.createElement('button');
+            dislikeButton.type = 'button'; // Use button type
+            dislikeButton.classList.add('btn', 'btn-danger', 'py-0', 'px-2');
+            dislikeButton.style.fontSize = '12px';
+            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+
+            if (!enabled) {
+                likeButton.disabled = true;
+                dislikeButton.disabled = true;
+            }
+            container.appendChild(likeButton);
+            container.appendChild(dislikeButton);
+
+            // Add event listeners for like and dislike buttons
+            likeButton.addEventListener('click', () => {
+                handleLikeClick(sale, likeButton);
+            });
+
+            dislikeButton.addEventListener('click', () => {
+                handleDislikeClick(sale, dislikeButton);
+            });
+
+            return container;
+        }
+
+        // Handle like button click
+        function handleLikeClick(sale, likeButton) {
+            if (!sale.liked) {
+                // Update the sale object
+                sale.likes_num += 1;
+                sale.liked = true;
+
+                // Update the like count in the UI
+                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+
+                // Send an AJAX request to update the like on the backend
+                // (You can implement this part according to your backend API)
+            } else {
+                // Update the sale object
+                sale.likes_num -= 1;
+                sale.liked = false;
+
+                // Update the like count in the UI
+                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+
+                // Send an AJAX request to update the like on the backend
+                // (You can implement this part according to your backend API)
+            }
+        }
+
+        // Handle dislike button click
+        function handleDislikeClick(sale, dislikeButton) {
+            if (!sale.disliked) {
+                // Update the sale object
+                sale.dislikes_num += 1;
+                sale.disliked = true;
+
+                // Update the dislike count in the UI
+                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+
+                // Send an AJAX request to update the dislike on the backend
+                // (You can implement this part according to your backend API)
+            } else {
+                // Update the sale object
+                sale.dislikes_num -= 1;
+                sale.disliked = false;
+
+                // Update the dislike count in the UI
+                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+
+                // Send an AJAX request to update the dislike on the backend
+                // (You can implement this part according to your backend API)
+            }
+        }
+
+        // Sale Details
+        const cardDetails_productName = document.getElementById('cardDetails_productName');
+        const cardDetails_productImage = document.getElementById('cardDetails_productImage');
+        const cardDetails_productPrice = document.getElementById('cardDetails_productPrice');
+        const cardDetails_stockToggle = document.getElementById('cardDetails_stockToggle');
+        const cardDetails_specialOfferIcon = document.getElementById('cardDetails_specialOfferIcon');
+        const cardDetails_specialOfferText = document.getElementById('cardDetails_specialOfferText');
+        const cardDetails_submittedBy = document.getElementById('cardDetails_submittedBy');
+        const cardDetails_submissionDate = document.getElementById('cardDetails_submissionDate');
+        const cardDetails_submittedByUserScore = document.getElementById('cardDetails_submittedByUserScore');
+        const cardDetails_likes = document.getElementById('cardDetails_likeBtn');
+        const cardDetails_dislikes = document.getElementById('cardDetails_dislikeBtn');
+
+        // Function to display Sale information in Card:
+        function displaySaleInfoInCard(sale) {
+            // Hide the sales list and show the detailed sale information
+            card_salesList.classList.add('d-none');
+            card_detailedSale.classList.remove('d-none');
+            card_backBtm.classList.remove('d-none');
+
+            // Load the sale information:
+            cardDetails_productName.textContent = sale.name;
+            cardDetails_productImage.backgroundImage = `url(/img/products/${sale.name}.jpeg)`;
+            cardDetails_productPrice.textContent = `${sale.price}€`;
+            cardDetails_submissionDate.textContent = sale.date_created.split('T')[0];
+            if (sale.stock) {
+                cardDetails_stockToggle.checked = true;
+                cardDetails_dislikes.disabled = false;
+                cardDetails_likes.disabled = false;
+            } else {
+                cardDetails_stockToggle.checked = false;
+                cardDetails_dislikes.disabled = true;
+                cardDetails_likes.disabled = true;
+            }
+
+            // Event Listener on Stock Toggle
+            cardDetails_stockToggle.addEventListener('change', () => {
+                if (cardDetails_stockToggle.checked) {
+                    cardDetails_dislikes.disabled = false;
+                    cardDetails_likes.disabled = false;
+                } else {
+                    cardDetails_dislikes.disabled = true;
+                    cardDetails_likes.disabled = true;
+                }
+            });
+
+            // Check if criteria are matched ( Special Offer )
+            if (sale.criteria_ok) {
+                cardDetails_specialOfferIcon.classList.remove('d-none');
+            } else {
+                cardDetails_specialOfferIcon.classList.add('d-none');
+                cardDetails_specialOfferText.textContent = ' No';
+            }
+
+            // Add the like and dislike buttons numbers:
+            cardDetails_likes.innerHTML = `<i class="fas fa-thumbs-up fa-xs" style="color: white;"></i> ${sale.likes_num}`;
+            cardDetails_dislikes.innerHTML = `<i class="fas fa-thumbs-down fa-xs" style="color: white;"></i> ${sale.dislikes_num}`;
+
+            // Add event handlers on button presses:
+            cardDetails_likes.addEventListener('click', () => {
+                handleLikeClick(sale, cardDetails_likes);
+            });
+            cardDetails_dislikes.addEventListener('click', () => {
+                handleDislikeClick(sale, cardDetails_dislikes);
+            });
+
+        }
+
+        // Back to SaleList button
+        card_backBtm.addEventListener('click', () => {
+            card_detailedSale.classList.add('d-none');
+            card_salesList.classList.remove('d-none');
+            card_backBtm.classList.add('d-none');
+        });
+
         // Close card button event listener
         const card_closeBtn = document.getElementById('card_closeBtm');
         card_closeBtn.addEventListener('click', () => {
@@ -370,7 +688,7 @@
         }
 
         // Locate User Button Event Listener
-        const focusUserLocationBtn= document.getElementById('focusUserLocationBtn');
+        const focusUserLocationBtn = document.getElementById('focusUserLocationBtn');
         focusUserLocationBtn.addEventListener('click', () => {
             initializeUserLocation(userLocation, userMarker);
         });

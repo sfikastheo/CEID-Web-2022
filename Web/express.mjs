@@ -34,7 +34,7 @@ export function auth(req, res, next) {
     res.cookie("authToken", req.sessionID, {
 			maxAge: 60000,
 			sameSite: "None",
-			secure: false,
+			secure: true,
 		});
 
 		next(); // User is authenticated, continue to the next middleware/route
