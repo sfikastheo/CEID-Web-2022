@@ -154,21 +154,50 @@
                                                 <i class="fa-solid fa-shop fa-lg"></i>
                                                 <h4 id="card_storeName" class="ml-2 mx-3 my-0">Store</h4>
                                             </div>
-                                            <div class="div justify-content-right">
+                                            <div class="d-flex justify-content-end">
                                                 <!-- Add Sale Button -->
-                                                <button id="card_addSaleBtm" class="btn btn-primary px-2 d-none"
-                                                    style="border: 0px;" type="button">
-                                                    <i class="fas fa-plus fa-sm" style="color: white;"></i>
-                                                </button>
+                                                <div id="card_addSaleDropdownDiv" class="dropdown no-arrow m-0 p-0">
+                                                    <button id="card_addSaleBtn" class="btn btn-primary px-2"
+                                                        style="border: 0px; margin-right: 4px;">
+                                                        <i class="fas fa-plus fa-sm" style="color: white;"></i>
+                                                    </button>
+                                                    <div id='card_customDropDown'
+                                                        class="custom-dropDown dropdown-menu dropdown-menu-end p-3 animated--grow-in">
+                                                        <!-- Element List to be filled dynamically -->
+                                                        <div id="card_addSaleDropdownItems"
+                                                            class="w-100 me-auto d-none"></div>
+                                                        <!-- Sale Price input element -->
+                                                        <form id="card_addSalePriceForm"
+                                                            class="me-auto w-100 d-none d-flex align-items-center">
+                                                            <div class="input-group" style="padding-bottom: 5px;">
+                                                                <div style="flex: 1;">
+                                                                    <input id="card_addSalePriceInput"
+                                                                        class="bg-light form-control border-0 small"
+                                                                        type="text" placeholder="Price..."
+                                                                        style="width: 100%; font-size: 14px;">
+                                                                    <!-- Width is set to 100% -->
+                                                                </div>
+                                                                <div class="input-group-append">
+                                                                    <button id="card_submitSalePriceButton"
+                                                                        class="btn btn-primary bg-custom-green py-0"
+                                                                        style="border: 0px;" type="button">
+                                                                        <i class="fas fa-plus"
+                                                                            style="color: white;"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                                 <!-- Back to SalesList Button -->
-                                                <button id="card_backBtm" class="btn btn-primary px-2 d-none"
-                                                    style="border: 0px;" type="button">
+                                                <button id="card_backBtn" class="btn btn-primary px-2 d-none"
+                                                    style="border: 0px; margin-right: 4px;">
                                                     <i class="fas fa-solid fa-circle-left fa-sm"
                                                         style="color: white;"></i>
                                                 </button>
                                                 <!-- Close Card Button -->
-                                                <button id="card_closeBtm" class="btn btn-primary px-2"
-                                                    style="border: 0px;" type="button">
+                                                <button id="card_closeBtn" class="btn btn-primary px-2"
+                                                    style="border: 0px;">
                                                     <i class="fas fa-xmark fa-sm" style="color: white;"></i>
                                                 </button>
                                             </div>
@@ -184,10 +213,8 @@
                                                 <div class="row p-0 m-0 g-0">
                                                     <h6 id="cardDetails_productName">Product Name</h6>
                                                     <div class="col d-md-block m-4">
-                                                        <!-- Product Image -->
-                                                        <div id="cardDetails_productImage" class="background-image-container"
-                                                            style= "background-size: cover; background-position: center center; width: 100%; height: 100%; border-radius: 1rem 0 0 1rem;">
-                                                        </div>
+                                                        <img id="cardDetails_productImage" class="img-fluid rounded"
+                                                            src="" alt="Product Image" />
                                                     </div>
                                                     <div class="col">
                                                         <!-- Product Information -->
@@ -209,13 +236,13 @@
                                                             <li>User's Score: <span
                                                                     id="cardDetails_submittedByUserScore"></span>
                                                             </li>
-                                                            <div class="d-flex mt-2" style="font-size: 12px;" >
-                                                                <button id="cardDetails_likeBtn"
-                                                                    class="btn btn-primary" style="border: 0px;"
-                                                                    type="button">
+                                                            <div class="d-flex mt-2" style="font-size: 12px;">
+                                                                <button id="cardDetails_likeBtn" class="btn btn-primary"
+                                                                    style="border: 0px;" type="button">
                                                                 </button>
                                                                 <button id="cardDetails_dislikeBtn"
-                                                                    class="btn btn-danger" style="border: 0px; margin-left: 2px;"
+                                                                    class="btn btn-danger"
+                                                                    style="border: 0px; margin-left: 2px;"
                                                                     type="button">
                                                                 </button>
                                                             </div>
@@ -383,8 +410,8 @@
         const card_salesList = document.getElementById('card_salesList');
         const card_detailedSale = document.getElementById('card_detailedSale');
         const card_storeName = document.getElementById('card_storeName');
-        const card_addSaleBtm = document.getElementById('card_addSaleBtm');
-        const card_backBtm = document.getElementById('card_backBtm');
+        const card_addSaleDropdownDiv = document.getElementById('card_addSaleDropdownDiv');
+        const card_backBtn = document.getElementById('card_backBtn');
 
         // Function to display the store info in the sidebar
         function displayStoreInfoInCard(storeInfo, storeSales) {
@@ -400,7 +427,7 @@
             // Show the sales list
             card_salesList.classList.remove('d-none');
             // Hide everything else 
-            card_backBtm.classList.add('d-none');
+            card_backBtn.classList.add('d-none');
             card_detailedSale.classList.add('d-none');
 
             // Add the store name to the sidebar
@@ -410,11 +437,11 @@
             distanceWithUser = calculateDistance(userLocation.lng, userLocation.lat,
                 storeInfo.geometry.coordinates[0], storeInfo.geometry.coordinates[1]);
 
-            // If distance < 50 show add sale button else hide it
+            // If distance < 50 show add sale interface
             if (distanceWithUser < 50) {
-                card_addSaleBtm.classList.remove('d-none');
+                card_addSaleDropdownDiv.classList.remove('d-none');
             } else {
-                card_addSaleBtm.classList.add('d-none');
+                card_addSaleDropdownDiv.classList.add('d-none');
             }
 
             // Display sales if available in storeSales
@@ -463,7 +490,6 @@
                     // Update elements functionality based on user distance
                     if (distanceWithUser < 50) {
                         saleName.style.pointerEvents = 'auto';
-                        card_addSaleBtm.classList.remove('d-none');
                     }
 
                     const enabled = sale.stock && (distanceWithUser < 50);
@@ -595,11 +621,15 @@
             // Hide the sales list and show the detailed sale information
             card_salesList.classList.add('d-none');
             card_detailedSale.classList.remove('d-none');
-            card_backBtm.classList.remove('d-none');
+            card_backBtn.classList.remove('d-none');
 
             // Load the sale information:
             cardDetails_productName.textContent = sale.name;
-            cardDetails_productImage.backgroundImage = `url(/img/products/${sale.name}.jpeg)`;
+
+            // Set the image background
+            // cardDetails_productImage.src = `/img/products/Καραμολέγκος Παξαμάς Σικαλης 400γρ.jpeg`;
+            cardDetails_productImage.src = `/img/products/${sale.name}.jpeg`;
+
             cardDetails_productPrice.textContent = `${sale.price}€`;
             cardDetails_submissionDate.textContent = sale.date_created.split('T')[0];
             if (sale.stock) {
@@ -646,14 +676,14 @@
         }
 
         // Back to SaleList button
-        card_backBtm.addEventListener('click', () => {
+        card_backBtn.addEventListener('click', () => {
             card_detailedSale.classList.add('d-none');
             card_salesList.classList.remove('d-none');
-            card_backBtm.classList.add('d-none');
+            card_backBtn.classList.add('d-none');
         });
 
         // Close card button event listener
-        const card_closeBtn = document.getElementById('card_closeBtm');
+        const card_closeBtn = document.getElementById('card_closeBtn');
         card_closeBtn.addEventListener('click', () => {
             card_info.classList.add('d-none');
         });
@@ -800,6 +830,121 @@
 
         storeCategoryCollapsedButton.addEventListener('click', () => {
             filterStoresByCategory(storeCategoryCollapsedInput.value);
+        });
+
+        // =================== Add Sale Offer ===================
+
+        // Access needed DOM elements:
+        const card_customDropDown = document.getElementById('card_customDropDown');
+        const card_addSaleDropdownItems = document.getElementById('card_addSaleDropdownItems');
+        const card_addSalePriceForm = document.getElementById('card_addSalePriceForm');
+        const card_addSalePriceInput = document.getElementById('card_addSalePriceInput');
+        const card_submitSalePriceButton = document.getElementById('card_submitSalePriceButton');
+
+        // On add sale button click, show the dropdown menu
+        const card_addSaleBtn = document.getElementById('card_addSaleBtn');
+        card_addSaleBtn.addEventListener('click', () => {
+            if (card_customDropDown.classList.contains('show')) {
+                card_customDropDown.classList.remove('show');
+                return;
+            }
+            card_customDropDown.classList.add('show');
+            card_addSaleDropdownItems.classList.remove('d-none');
+            card_addSalePriceForm.classList.add('d-none');
+            populateCategories();
+        });
+
+        // load the categories
+        function populateCategories() {
+            // Clear the previous information
+            clearChildrenElements(card_addSaleDropdownItems);
+
+            categories.then((res) => {
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    res.forEach(category => {
+                        const categoryLink = document.createElement('a');
+                        categoryLink.classList.add('dropdown-item', 'me-2', 'text-gray-700');
+                        categoryLink.textContent = category.name;
+                        categoryLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            populateSubCategories(category.id);
+                        });
+                        card_addSaleDropdownItems.appendChild(categoryLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // load the subcategories
+        function populateSubCategories(categoryId) {
+            // fetch the subcategories from the categoryID
+            let subcategories = fetchAPI(`/api/categories/${categoryId}/subcategories`, "GET");
+
+            subcategories.then((res) => {
+                // Clear the previous information
+                clearChildrenElements(card_addSaleDropdownItems);
+
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    res.forEach(subcategory => {
+                        const subcategoryLink = document.createElement('a');
+                        subcategoryLink.classList.add('dropdown-item', 'me-2', 'text-gray-700');
+                        subcategoryLink.textContent = subcategory.name;
+                        subcategoryLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            populateProducts(subcategory.id);
+                        });
+                        card_addSaleDropdownItems.appendChild(subcategoryLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // load the products
+        function populateProducts(subcategoryId) {
+            // fetch the products from the subcategoryID
+            let products = fetchAPI(`/api/categories/subcategories/${subcategoryId}/products`, "GET");
+
+            products.then((res) => {
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    // Clear the previous information
+                    clearChildrenElements(card_addSaleDropdownItems);
+
+                    res.forEach(product => {
+                        const productLink = document.createElement('a');
+                        productLink.classList.add('dropdown-item', 'me-2', 'text-gray-700');
+                        productLink.textContent = product.name;
+                        productLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            card_addSaleDropdownItems.classList.add('d-none');
+                            card_addSalePriceInput.value = '';
+                            card_addSalePriceForm.classList.remove('d-none');
+                        });
+                        card_addSaleDropdownItems.appendChild(productLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // Add event listener to the submit button
+        card_submitSalePriceButton.addEventListener('click', () => {
+            // Get the price from the input
+            const price = card_addSalePriceInput.value;
+
+            // Check if the price is valid
+            if (price && !isNaN(price)) {
+                // Send the price to the backend
+                // (You can implement this part according to your backend API)
+                console.log(price);
+
+                // Close the dropdown menu
+                card_customDropDown.classList.remove('show');
+            }
         });
 
         // ===================== Logout =====================

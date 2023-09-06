@@ -151,6 +151,30 @@ export async function storesFromCategory(categoryId) {
   }
 }
 
+/*==================== Categories/SubCategories/Products ==================== */
+
+export async function subcategories(categoryId) {
+	try {
+		const query = `SELECT id, name FROM subcategories WHERE categories_id = ?;`;
+		const result = await mariadb.paramQuery(query, [categoryId]);
+		return result;
+	} catch (error) {
+		console.error('Error in subcategories:', error);
+		throw new Error('An error occurred while fetching subcategories.');
+	}
+}
+
+export async function products(subcategoryId) {
+	try {
+		const query = `SELECT id, name FROM products WHERE subcategories_id = ?;`;
+		const result = await mariadb.paramQuery(query, [subcategoryId]);
+		return result;
+	} catch (error) {
+		console.error('Error in products:', error);
+		throw new Error('An error occurred while fetching products.');
+	}
+}
+
 /*================================ Other ================================ */
 function jsonToGeoJson(input, format) {
 	const geojson = {
