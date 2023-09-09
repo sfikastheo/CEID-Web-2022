@@ -235,6 +235,136 @@ export async function addSale(saleData) {
 	}
 }
 
+/*============================ Likes & Dislikes ============================ */
+
+export async function likeSale(saleId, userId) {
+	try {
+		// Check if the user already liked the sale
+		const checkLikeQuery = `SELECT COUNT(*) AS count FROM likes WHERE sales_id = ? AND user_liked = ?;`;
+		const checkLikeResult = await mariadb.paramQuery(checkLikeQuery, [saleId, userId]);
+
+		if (checkLikeResult[0].count > 0) {
+			// User already liked the sale, return an error
+			return { success: false, message: 'User already liked the sale' };
+		}
+
+		// Insert the like
+		const insertLikeQuery = `INSERT INTO likes (sales_id, user_liked ) VALUES (?, ?);`;
+		await mariadb.paramQuery(insertLikeQuery, [saleId, userId]);
+
+		// Updating the likes_num is done with a trigger
+
+		// Commit the changes
+		const commitResult = await mariadb.commit();
+
+		if (commitResult) {
+			return { success: true, message: 'Sale liked successfully' };
+		} else {
+			return { success: false, message: 'Failed to like sale' };
+		}
+	} catch (error) {
+		console.error('An error occurred while liking sale.', error);
+		throw new Error('An error occurred while liking sale.');
+	}
+}
+
+export async function dislikeSale(saleId, userId) {
+    try {
+        // Check if the user already disliked the sale
+        const checkDislikeQuery = `SELECT COUNT(*) AS count FROM dislikes WHERE sales_id = ? AND user_disliked = ?;`;
+        const checkDislikeResult = await mariadb.paramQuery(checkDislikeQuery, [saleId, userId]);
+
+        if (checkDislikeResult[0].count > 0) {
+            // User already disliked the sale, return an error
+            return { success: false, message: 'User already disliked the sale' };
+        }
+
+        // Insert the dislike
+        const insertDislikeQuery = `INSERT INTO dislikes (sales_id, user_disliked ) VALUES (?, ?);`;
+        await mariadb.paramQuery(insertDislikeQuery, [saleId, userId]);
+
+        // Updating the dislikes_num is done with a trigger
+
+        // Commit the changes
+        const commitResult = await mariadb.commit();
+
+        if (commitResult) {
+            return { success: true, message: 'Sale disliked successfully' };
+        } else {
+            return { success: false, message: 'Failed to dislike sale' };
+        }
+    } catch (error) {
+        console.error('An error occurred while disliking sale.', error);
+        throw new Error('An error occurred while disliking sale.');
+    }
+}
+
+export async function unlikeSale(saleId, userId) {
+    try {
+        // Delete the like
+        const deleteLikeQuery = `DELETE FROM likes WHERE sales_id = ? AND user_liked = ?;`;
+        await mariadb.paramQuery(deleteLikeQuery, [saleId, userId]);
+
+        // Updating the likes_num is done with a trigger
+
+        // Commit the changes
+        const commitResult = await mariadb.commit();
+
+        if (commitResult) {
+            return { success: true, message: 'Like removed successfully' };
+        } else {
+            return { success: false, message: 'Failed to remove like' };
+        }
+    } catch (error) {
+        console.error('An error occurred while removing like.', error);
+        throw new Error('An error occurred while removing like.');
+    }
+}
+
+export async function undislikeSale(saleId, userId) {
+    try {
+        // Delete the dislike
+        const deleteDislikeQuery = `DELETE FROM dislikes WHERE sales_id = ? AND user_disliked = ?;`;
+        await mariadb.paramQuery(deleteDislikeQuery, [saleId, userId]);
+
+        // Updating the dislikes_num is done with a trigger
+
+        // Commit the changes
+        const commitResult = await mariadb.commit();
+
+        if (commitResult) {
+            return { success: true, message: 'Dislike removed successfully' };
+        } else {
+            return { success: false, message: 'Failed to remove dislike' };
+        }
+    } catch (error) {
+        console.error('An error occurred while removing dislike.', error);
+        throw new Error('An error occurred while removing dislike.');
+    }
+}
+
+/*================================ Stock ================================ */
+
+export async function updateSaleStock(id, newStockStatus) {
+    try {
+        // Update the stock status in the database
+        const updateStockQuery = 'UPDATE sales SET stock = ? WHERE id = ?';
+        await mariadb.paramQuery(updateStockQuery, [newStockStatus, id]);
+
+        // Commit the changes
+        const commitResult = await mariadb.commit();
+
+        if (commitResult) {
+            return { success: true, message: 'Stock status updated successfully' };
+        } else {
+            return { success: false, message: 'Failed to update stock status' };
+        }
+    } catch (error) {
+        console.error('Error updating stock status:', error);
+        throw new Error('An error occurred while updating stock status.');
+    }
+}
+
 /*================================ Other ================================ */
 function jsonToGeoJson(input, format) {
 	const geojson = {

@@ -49,6 +49,8 @@ node express.mjs
 * Open your browser and go to http://localhost:3000/
 
 #### Notes
+* In case you want to install the mariadb database through the dump file, you should replace
+the definer of the stored procedures with your username.
 * Following the project instructions, accessing the web app needs authentication (login).
 Alternatively, you can access the web app without authentication, and in case specific
 actions require authentication, you will be redirected to the login page. This seems to be

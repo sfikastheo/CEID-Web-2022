@@ -351,6 +351,7 @@
         // Keep track of some user's action states:
         let chosenStore = null;
         let chosenProduct = null;
+        let chosenSale = null;
         // ===================== Stores =====================
 
         const storeIcon = L.icon({
@@ -570,51 +571,131 @@
 
         // Handle like button click
         function handleLikeClick(sale, likeButton) {
+            const id = sale.id;
+
             if (!sale.liked) {
-                // Update the sale object
-                sale.likes_num += 1;
-                sale.liked = true;
+                // Use the custom fetchAPI function to add a like
+                fetchAPI(`/api/sales/${id}/like`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.likes_num += 1;
+                            sale.liked = true;
 
-                // Update the like count in the UI
-                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            // Update the like count in the UI
+                            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                        } else {
+                            if (data.message === 'User already liked the sale') {
+                                // User already liked the sale, update the UI without making a request
+                                sale.likes_num += 1;
+                                sale.liked = true;
 
-                // Send an AJAX request to update the like on the backend
-                // (You can implement this part according to your backend API)
+                                // Update the like count in the UI
+                                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to add like:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
             } else {
-                // Update the sale object
-                sale.likes_num -= 1;
-                sale.liked = false;
+                // Use the custom fetchAPI function to remove a like
+                fetchAPI(`/api/sales/${id}/unlike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.likes_num -= 1;
+                            sale.liked = false;
 
-                // Update the like count in the UI
-                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            // Update the like count in the UI
+                            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                        } else {
+                            if (data.message === 'User already unliked the sale') {
+                                // User already removed the like, update the UI without making a request
+                                sale.likes_num -= 1;
+                                sale.liked = false;
 
-                // Send an AJAX request to update the like on the backend
-                // (You can implement this part according to your backend API)
+                                // Update the like count in the UI
+                                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to remove like:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
             }
         }
 
         // Handle dislike button click
         function handleDislikeClick(sale, dislikeButton) {
+            const id = sale.id;
+
             if (!sale.disliked) {
-                // Update the sale object
-                sale.dislikes_num += 1;
-                sale.disliked = true;
+                // Use the custom fetchAPI function to add a dislike
+                fetchAPI(`/api/sales/${id}/dislike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.dislikes_num += 1;
+                            sale.disliked = true;
 
-                // Update the dislike count in the UI
-                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            // Update the dislike count in the UI
+                            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                        } else {
+                            if (data.message === 'User already disliked the sale') {
+                                // User already disliked the sale, update the UI without making a request
+                                sale.dislikes_num += 1;
+                                sale.disliked = true;
 
-                // Send an AJAX request to update the dislike on the backend
-                // (You can implement this part according to your backend API)
+                                // Update the dislike count in the UI
+                                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to add dislike:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
             } else {
-                // Update the sale object
-                sale.dislikes_num -= 1;
-                sale.disliked = false;
+                // Use the custom fetchAPI function to remove a dislike
+                fetchAPI(`/api/sales/${id}/undislike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.dislikes_num -= 1;
+                            sale.disliked = false;
 
-                // Update the dislike count in the UI
-                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            // Update the dislike count in the UI
+                            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                        } else {
+                            if (data.message === 'User already undisliked the sale') {
+                                // User already removed the dislike, update the UI without making a request
+                                sale.dislikes_num -= 1;
+                                sale.disliked = false;
 
-                // Send an AJAX request to update the dislike on the backend
-                // (You can implement this part according to your backend API)
+                                // Update the dislike count in the UI
+                                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to remove dislike:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
             }
         }
 
@@ -633,6 +714,8 @@
 
         // Function to display Sale information in Card:
         function displaySaleInfoInCard(sale) {
+            // Update the chosenSale variable
+            chosenSale = sale;
             // Hide the sales list and show the detailed sale information
             card_salesList.classList.add('d-none');
             card_detailedSale.classList.remove('d-none');
@@ -656,17 +739,6 @@
                 cardDetails_dislikes.disabled = true;
                 cardDetails_likes.disabled = true;
             }
-
-            // Event Listener on Stock Toggle
-            cardDetails_stockToggle.addEventListener('change', () => {
-                if (cardDetails_stockToggle.checked) {
-                    cardDetails_dislikes.disabled = false;
-                    cardDetails_likes.disabled = false;
-                } else {
-                    cardDetails_dislikes.disabled = true;
-                    cardDetails_likes.disabled = true;
-                }
-            });
 
             // Check if criteria are matched ( Special Offer )
             if (sale.criteria_ok) {
@@ -711,6 +783,35 @@
         const card_closeBtn = document.getElementById('card_closeBtn');
         card_closeBtn.addEventListener('click', () => {
             card_info.classList.add('d-none');
+        });
+
+        // Event Listener on Stock Toggle
+        cardDetails_stockToggle.addEventListener('change', () => {
+            const id = chosenSale.id;
+            const newStockStatus = cardDetails_stockToggle.checked;
+
+            // Use the custom fetchAPI function to update the stock status
+            fetchAPI(`/api/sales/${id}/stock`, 'PATCH', { stock: newStockStatus })
+                .then((data) => {
+                    if (data.success) {
+                        // Update the sale object's stock status
+                        chosenSale.stock = newStockStatus;
+
+                        // Enable/disable like and dislike buttons based on stock status
+                        cardDetails_dislikes.disabled = !newStockStatus;
+                        cardDetails_likes.disabled = !newStockStatus;
+
+                        // Handle success
+                        console.log('Stock status updated successfully.');
+                    } else {
+                        // Handle the error
+                        console.error('Failed to update stock status:', data.message);
+                    }
+                })
+                .catch((error) => {
+                    // Handle fetchAPI errors
+                    console.error('Fetch API error:', error);
+                });
         });
 
         // ===================== User =====================
