@@ -147,7 +147,8 @@
                                         </button>
                                     </div>
                                     <!-- Card Information -->
-                                    <div id="card_info" class="card map-info col-xl-4 col-lg-5 col-md-9 col-12 d-none"
+                                    <div id="card_info"
+                                        class="card map-info col-xl-4 col-lg-5 col-md-9 col-12 d-none animated--grow-in"
                                         style="border-radius: 1rem;">
                                         <div class="card-header d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
@@ -326,6 +327,16 @@
 
         let stores = fetchAPI("/api/stores", "GET");
 
+        // Fetch userName
+        let username = fetchAPI("/users/username", "GET");
+        username.then((res) => {
+            if (typeof res !== 'undefined') {
+                document.getElementById('username_span').textContent = res;
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
         const startLocation = { lat: 38.24638, lng: 21.73505 };
         const map = L.map('map', { zoomControl: false }).setView(startLocation, 18);
         var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -337,6 +348,9 @@
         // Layer Group to store markers. This is important because the layer can be cleared in an instant
         const storesMarkersLayerGroup = L.layerGroup().addTo(map);
 
+        // Keep track of some user's action states:
+        let chosenStore = null;
+        let chosenProduct = null;
         // ===================== Stores =====================
 
         const storeIcon = L.icon({
@@ -382,6 +396,7 @@
                             if (typeof res !== 'undefined') {
                                 // Display the store info 
                                 displayStoreInfoInCard(feature, res);
+                                chosenStore = feature.properties.id;
                             }
                         }).catch(error => {
                             console.error('Error fetching store information: ', error);
@@ -673,6 +688,16 @@
                 handleDislikeClick(sale, cardDetails_dislikes);
             });
 
+            // Fetch the sale submitted by User information
+            fetchAPI(`/api/sales/${sale.id}/submittedBy`, "GET").then((res) => {
+                if (typeof res !== 'undefined') {
+                    cardDetails_submittedBy.textContent = res[0].username;
+                    cardDetails_submittedByUserScore.textContent = res[0].sum_score;
+                }
+            }).catch(error => {
+                console.error('Error fetching user information: ', error);
+            });
+
         }
 
         // Back to SaleList button
@@ -851,6 +876,7 @@
             card_customDropDown.classList.add('show');
             card_addSaleDropdownItems.classList.remove('d-none');
             card_addSalePriceForm.classList.add('d-none');
+
             populateCategories();
         });
 
@@ -920,6 +946,9 @@
                         productLink.addEventListener('click', (e) => {
                             e.preventDefault();
                             card_addSaleDropdownItems.classList.add('d-none');
+
+                            // Display the price input form
+                            chosenProduct = product.id;
                             card_addSalePriceInput.value = '';
                             card_addSalePriceForm.classList.remove('d-none');
                         });
@@ -931,19 +960,42 @@
             });
         }
 
-        // Add event listener to the submit button
-        card_submitSalePriceButton.addEventListener('click', () => {
-            // Get the price from the input
-            const price = card_addSalePriceInput.value;
+        card_submitSalePriceButton.addEventListener('click', async () => {
+            const price = parseFloat(card_addSalePriceInput.value);
 
-            // Check if the price is valid
-            if (price && !isNaN(price)) {
-                // Send the price to the backend
-                // (You can implement this part according to your backend API)
-                console.log(price);
+            if (isNaN(price) || price <= 0) {
+                // Handle invalid price input
+                console.error('Invalid price');
+                alert('Sorry, input price was invalid. Please try again.');
+                return;
+            }
 
-                // Close the dropdown menu
+            try {
+                const saleData = {
+                    store_id: chosenStore,
+                    product_id: chosenProduct,
+                    price: price,
+                };
+
+                // Send the sale data to the backend 
+                const response = await fetchAPI('/api/sales/submit', 'POST', saleData);
+
+                if (response && response.message === 'Sale added successfully') {
+                    // Sale successfully added
+                    console.log('Sale added successfully');
+                    // Display a success message to the user
+                    alert('Sale added successfully');
+                } else {
+                    // Sale was not added (e.g., price not low enough)
+                    console.error('Failed to add sale');
+                    // Display an error message to the user
+                    alert('Sorry, sale\'s price is not at least 20% lower than the existing sale.');
+                }
+                // Clear the dropdown menu
                 card_customDropDown.classList.remove('show');
+            } catch (error) {
+                console.error('Error adding sale:', error);
+                // Handle other errors, e.g., network issues
             }
         });
 

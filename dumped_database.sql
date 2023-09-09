@@ -3159,7 +3159,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER sale_dilikes_update AFTER INSERT ON dislikes
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER sale_dilikes_update AFTER INSERT ON dislikes
 FOR EACH ROW
     BEGIN
         DECLARE user2update INT UNSIGNED;
@@ -3195,7 +3195,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER sale_wdrawdislikes_update AFTER DELETE ON dislikes
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER sale_wdrawdislikes_update AFTER DELETE ON dislikes
 FOR EACH ROW
     BEGIN
         DECLARE user2update INT UNSIGNED;
@@ -7254,7 +7254,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER sale_likes_update AFTER INSERT ON likes
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER sale_likes_update AFTER INSERT ON likes
 FOR EACH ROW
     BEGIN
         DECLARE user2update INT UNSIGNED;
@@ -7290,7 +7290,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER sale_wdrawlikes_update AFTER DELETE ON likes
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER sale_wdrawlikes_update AFTER DELETE ON likes
     FOR EACH ROW
         BEGIN
             DECLARE user2update INT UNSIGNED;
@@ -11066,7 +11066,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER salesub_score_update BEFORE INSERT ON sales
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER salesub_score_update BEFORE INSERT ON sales
 FOR EACH ROW 
     BEGIN
         DECLARE avgp_prevday FLOAT(4,2);
@@ -11107,7 +11107,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sf`@`localhost`*/ /*!50003 TRIGGER update_storeSales AFTER INSERT ON sales
+/*!50003 CREATE*/ /*!50017 DEFINER=`sfikas`@`localhost`*/ /*!50003 TRIGGER update_storeSales AFTER INSERT ON sales
 FOR EACH ROW
 	BEGIN
 		UPDATE stores
@@ -11384,7 +11384,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
-  `passwd` varchar(25) NOT NULL,
+  `passwd` varchar(250) NOT NULL,
   `email` varchar(40) NOT NULL,
   `sum_score` int(11) NOT NULL DEFAULT 0,
   `sum_tokens` int(11) NOT NULL DEFAULT 0,

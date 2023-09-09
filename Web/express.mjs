@@ -11,6 +11,7 @@ import { routerRegister } from './routes/register.mjs';
 import { routerUsers } from './routes/users.mjs';
 import { routerStores } from './routes/stores.mjs';
 import { routerCategories } from './routes/categories.mjs';
+import { routerSales } from './routes/sales.mjs';
 
 // Import the needed functions
 import { storesToGeoJson, tableInfo } from './dbToNode.mjs';
@@ -150,6 +151,7 @@ server.use('/api/register',routerRegister);
 
 server.use('/api/stores', auth, routerStores);
 server.use('/api/categories', auth, routerCategories);
+server.use('/api/sales', auth, routerSales);
 
 server.use('/users/', auth, routerUsers);
 

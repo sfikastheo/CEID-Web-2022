@@ -41,7 +41,7 @@ export async function registerUser(username, email, password) {
 		// Check if username or email already exist
 		const userExistQuery = `SELECT COUNT(*) AS count FROM users WHERE username = ? OR email = ?;`;
 		const userExistResult = await mariadb.paramQuery(userExistQuery, [username, email]);
-		
+
 		if (userExistResult[0].count > 0) {
 			return { success: false, message: 'Username or email already in use' };
 		}
@@ -50,9 +50,9 @@ export async function registerUser(username, email, password) {
 		const hashedPassword = await bcrypt.hash(password, 10);
 		const insertUserQuery = `INSERT INTO users (username, email, passwd) VALUES (?, ?, ?);`;
 		await mariadb.paramQuery(insertUserQuery, [username, email, hashedPassword]);
-		
+
 		// Commit the changes
-    await mariadb.commit();
+		await mariadb.commit();
 
 		return { success: true };
 	} catch (error) {
@@ -74,15 +74,33 @@ function arrayjsonFormatter(input, format) {
 // SOS: Prepared statements are not supported for table names and column names
 // Only values can be parametrized
 export async function tableInfo(tableName, tableFields) {
-  try {
-    const fields = tableFields.join(', ');
-    const query = `SELECT ${fields} FROM ${tableName};`;
-    const table_json = await mariadb.query(query);
-    return table_json;
-  } catch (error) {
-    console.error('Error in tableInfo:', error);
-    throw new Error('An error occurred while fetching table information.');
-  }
+	try {
+		const fields = tableFields.join(', ');
+		const query = `SELECT ${fields} FROM ${tableName};`;
+		const table_json = await mariadb.query(query);
+		return table_json;
+	} catch (error) {
+		console.error('Error in tableInfo:', error);
+		throw new Error('An error occurred while fetching table information.');
+	}
+}
+
+/*================================ Info ================================ */
+
+export async function getUserInfo(userId) {
+	try {
+		const query = `SELECT username, email, sum_score, sum_tokens, monthly_score, monthly_tokens FROM users WHERE id = ?;`;
+		const result = await mariadb.paramQuery(query, [userId]);
+
+		if (result.length > 0) {
+			return { success: true, userInfo: result[0] };
+		} else {
+			return { success: false, message: 'User not found.' };
+		}
+	} catch (error) {
+		console.error('Error getting user info:', error);
+		return { success: false, message: 'An internal error occurred.' };
+	}
 }
 
 /*================================ Stores - App ================================ */
@@ -105,7 +123,7 @@ function storesGeoJsonFormat(input) {
 
 export async function storesToGeoJson() {
 	let stores = await mariadb.query("select * from stores");
-	
+
 	const stores_geojson = {
 		type: "FeatureCollection",
 		features: arrayjsonFormatter(stores, storesGeoJsonFormat)
@@ -114,23 +132,23 @@ export async function storesToGeoJson() {
 }
 
 export async function storeInfo(storeId) {
-  try {
-    const query = `SELECT name, price, criteria_ok, date_created, likes_num, dislikes_num, stock
+	try {
+		const query = `SELECT sales.id, name, price, criteria_ok, date_created, likes_num, dislikes_num, stock
                    FROM sales
                    INNER JOIN products ON product_id = products.id
                    WHERE active = 1 AND store_id = ?`;
 
-    const result = await mariadb.paramQuery(query, [storeId]);
-    return result;
-  } catch (error) {
-    console.error('Error in storeInfo:', error);
-    throw new Error('An error occurred while fetching store information.');
-  }
+		const result = await mariadb.paramQuery(query, [storeId]);
+		return result;
+	} catch (error) {
+		console.error('Error in storeInfo:', error);
+		throw new Error('An error occurred while fetching store information.');
+	}
 }
 
 export async function storesFromCategory(categoryId) {
-  try {
-    const query = `SELECT stores.id, stores.name, stores.lon, stores.lat, stores.sale_exists
+	try {
+		const query = `SELECT stores.id, stores.name, stores.lon, stores.lat, stores.sale_exists
                    FROM categories
                    INNER JOIN subcategories ON categories.id = subcategories.categories_id
                    INNER JOIN products ON subcategories.id = products.subcategories_id
@@ -138,17 +156,17 @@ export async function storesFromCategory(categoryId) {
                    INNER JOIN stores ON stores.id = sales.store_id
                    WHERE categories.id = ?`;
 
-    const result = await mariadb.paramQuery(query, [categoryId]);
-    
-    const stores_geojson = {
-      type: "FeatureCollection",
-      features: arrayjsonFormatter(result, storesGeoJsonFormat)
-    };
-    return stores_geojson;
-  } catch (error) {
-    console.error('Error in storesFromCategory:', error);
-    throw new Error('An error occurred while fetching stores from category.');
-  }
+		const result = await mariadb.paramQuery(query, [categoryId]);
+
+		const stores_geojson = {
+			type: "FeatureCollection",
+			features: arrayjsonFormatter(result, storesGeoJsonFormat)
+		};
+		return stores_geojson;
+	} catch (error) {
+		console.error('Error in storesFromCategory:', error);
+		throw new Error('An error occurred while fetching stores from category.');
+	}
 }
 
 /*==================== Categories/SubCategories/Products ==================== */
@@ -172,6 +190,48 @@ export async function products(subcategoryId) {
 	} catch (error) {
 		console.error('Error in products:', error);
 		throw new Error('An error occurred while fetching products.');
+	}
+}
+
+/*================================ Sales ================================ */
+
+export async function saleUsersSubmitedInfo(saleId) {
+	try {
+		const query = `SELECT username, sum_score FROM users INNER JOIN sales ON users.id = sales.user_suggested WHERE sales.id = ?;`;
+		const result = await mariadb.paramQuery(query, [saleId]);
+		return result;
+	} catch (error) {
+		console.error('Error in saleUsersSubmitedInfo:', error);
+		throw new Error('An error occurred while fetching saleUsersSubmitedInfo.');
+	}
+}
+
+export async function addSale(saleData) {
+	try {
+		// Check if the submitted price is 20% or more lower than the previous price, if exists
+		const previousSaleQuery = `SELECT price FROM sales WHERE product_id = ? AND store_id = ?;`;
+		const previousSaleResult = await mariadb.paramQuery(previousSaleQuery, [saleData.product_id, saleData.store_id]);
+
+		if (previousSaleResult.length > 0 && saleData.price >= previousSaleResult[0].price * 0.8) {
+			// Price not low enough, return an error
+			return { success: false, message: 'Price not low enough' };
+		}
+
+		// Insert the new sale
+		const insertSaleQuery = `INSERT INTO sales (product_id, store_id, price, user_suggested, date_created, active, likes_num, dislikes_num) VALUES (?, ?, ?, ?, NOW(), 1, 0, 0);`;
+		await mariadb.paramQuery(insertSaleQuery, [saleData.product_id, saleData.store_id, saleData.price, saleData.user_suggested]);
+
+		// Commit the changes
+		const commitResult = await mariadb.commit();
+
+		if (commitResult) {
+			return { success: true, message: 'Sale added successfully' };
+		} else {
+			return { success: false, message: 'Failed to add sale' };
+		}
+	} catch (error) {
+		console.error('An error occurred while adding sale.', error);
+		throw new Error('An error occurred while adding sale.');
 	}
 }
 

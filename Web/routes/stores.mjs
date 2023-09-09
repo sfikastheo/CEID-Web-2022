@@ -37,12 +37,4 @@ routerStores.get('/categories/:id', async (req, res) => {
   }
 });
 
-routerStores.get('/subcategories/:id',(req,res)=>{
-
-});
-
-routerStores.get('/products/:id',(req,res)=>{
-
-});
-
 

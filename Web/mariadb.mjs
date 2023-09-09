@@ -47,6 +47,7 @@ export class Mariadb {
 	async commit() {
 		try {
 			await this.conn.commit();
+			return true;
 		} catch (error) {
 			// If there is an error, rollback the changes
 			await this.conn.rollback();
@@ -63,14 +64,14 @@ export class Mariadb {
 				return result;
 			} catch (error) {
 				console.error("Aborted: Query returned with error: ", error);
-				//throw error; // Re-throw the error to be handled at a higher level
+				throw error; // Re-throw the error to be handled at a higher level
 			}
 		} catch (error) {
 			console.error("Aborted: Error starting a transaction: ", error);
-			//throw error; // Re-throw the error to be handled at a higher level
+			throw error; // Re-throw the error to be handled at a higher level
 		}
 	}
-	
+
 	// parametrized queries are used to prevent sql injection
 	async paramQuery(query, values = []) {
 		try {
@@ -80,11 +81,11 @@ export class Mariadb {
 				return result;
 			} catch (error) {
 				console.error("Aborted: Query returned with error: ", error);
-				//throw error; // Re-throw the error to be handled at a higher level
+				throw error; // Re-throw the error to be handled at a higher level
 			}
 		} catch (error) {
 			console.error("Aborted: Error starting a transaction: ", error);
-			//throw error; // Re-throw the error to be handled at a higher level
+			throw error; // Re-throw the error to be handled at a higher level
 		}
 	}
 }
