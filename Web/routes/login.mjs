@@ -1,7 +1,7 @@
 'use strict';
 
 import express from 'express';
-import { validateLogin } from '../dbToNode.mjs';
+import { validateLogin, isAdmin } from '../dbToNode.mjs';
 
 export const routerLogin = express.Router();
 
