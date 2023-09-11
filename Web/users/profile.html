@@ -50,7 +50,7 @@
                           <p class="text-primary m-0 fw-bold">User Settings</p>
                         </div>
                         <div class="card-body">
-                          <form>
+                          <form id="updateCredentialsForm" onsubmit="event.preventDefault(); updateCredentials();">
                             <div class="row">
                               <div class="col">
                                 <div class="mb-3"><label class="form-label"
@@ -66,17 +66,17 @@
                             <div class="row">
                               <div class="col">
                                 <div class="mb-3"><label class="form-label" for="first_name"><strong>Password
-                                    </strong></label><input class="form-control" type="text" id="password"
+                                    </strong></label><input class="form-control" type="password" id="password"
                                     placeholder="Current Password" name="password"></div>
                               </div>
                               <div class="col">
                                 <div class="mb-3"><label class="form-label" for="last_name"><strong>New password
-                                    </strong></label><span> </span><input class="form-control" type="text"
+                                    </strong></label><span> </span><input class="form-control" type="password"
                                     id="newPassword" placeholder="Optionally change password" name="new password"></div>
                               </div>
                             </div>
                             <div class="mb-3"><button id="submitUserButton" class="btn btn-primary btn-sm"
-                                type="submit">Save
+                                onclick="updateCredentials()" type="button">Save
                                 Settings</button></div>
                           </form>
                         </div>
@@ -175,6 +175,89 @@
 
   <!-- Custom scripts -->
   <script type="text/javascript">
+    //------------------ FETCH API ----------------------//
+          async function fetchAPI(url, method, data = {}) {
+            const requestOptions = {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+            if (method !== "GET") {
+                requestOptions.body = JSON.stringify(data);
+            }
+            return await fetch(url, requestOptions)
+                .then(response => response.json())
+                .catch(error => {
+                    console.error(error);
+                    throw new Error('Something went wrong. Please try again later.');
+                });
+            }
+    //------------------ FETCH INFO ----------------------//
+
+            function fetchUserInfo() {
+              fetchAPI('/users/info', 'GET')
+              .then(userInfo => {
+              console.log("Full userInfo:", JSON.stringify(userInfo));
+
+                  const usernameInput = document.getElementById('username');
+                  const emailInput = document.getElementById('email');
+                  document.getElementById('monthlyTokens').textContent = userInfo.userInfo.monthly_tokens;
+                  document.getElementById('totalTokens').textContent = userInfo.userInfo.sum_tokens;
+                  document.getElementById('monthlyScore').textContent = userInfo.userInfo.monthly_score;
+                  document.getElementById('totalScore').textContent = userInfo.userInfo.sum_score;
+                  usernameInput.value = userInfo.userInfo.username;
+                  emailInput.value = userInfo.userInfo.email;
+
+              })
+              .catch(error => {
+                  console.error(error);
+              });
+              }
+              fetchUserInfo();  
+
+      //------------------ UPDATE CREDENTIALS ----------------------//
+
+      function updateCredentials() {
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const newPasswordInput = document.getElementById('newPassword');
+
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        const newPassword = newPasswordInput.value;
+
+        const data = {
+          username: username,
+          password: password,
+          newPassword: newPassword
+        };
+
+        console.log("Data:", JSON.stringify(data));
+
+        fetchAPI('/users/update-credentials', 'POST', data)
+        .then(response => {
+          console.log("Full response:", JSON.stringify(response));
+          console.log("Message:", response.message);
+          console.log("Success:", response.success);
+
+          if (response.success) {
+            alert(response.message);
+            window.location.href = "/users/profile";
+          } else {
+            alert(response.message);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+      window.onload = function() {
+        document.getElementById('password').value = '';
+        document.getElementById('newPassword').value = '';
+    };
+
+
   </script>
 
 </body>

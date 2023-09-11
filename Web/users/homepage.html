@@ -1105,7 +1105,7 @@
         function logout() {
             // Make a GET request to the logout route on the server
             fetch('/users/logout', {
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include', // Include credentials (cookies) in the request
                 redirect: 'follow'
             })

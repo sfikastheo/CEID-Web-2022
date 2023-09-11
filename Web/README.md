@@ -4,7 +4,8 @@
 * express
 * mariadb
 * dotenv
-* js-cookie
+* @canvasjs/charts
+* multer
 * express-session
 * bcrypt
 * geojson

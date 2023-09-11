@@ -34,6 +34,23 @@ export async function validateLogin(user, password, type) {
 	}
 }
 
+export async function isAdmin(user_id){
+	let adminquery = `SELECT id FROM admins WHERE users_id= ?;`; 
+	try {
+  		const answer = await mariadb.paramQuery(adminquery, [user_id]);
+		if (answer.length > 0) {
+			return { admin_access: true};
+		}
+		else {
+			return { admin_access: false };
+		}
+	}catch (error){
+		console.error('Error while looking for admin');
+		return { admin_access: false };
+	}
+
+}
+
 /*================================ Register ================================ */
 
 export async function registerUser(username, email, password) {
@@ -101,6 +118,22 @@ export async function getUserInfo(userId) {
 		console.error('Error getting user info:', error);
 		return { success: false, message: 'An internal error occurred.' };
 	}
+}
+
+export async function getUserPassword(userId) {
+    try {
+        const query = `SELECT passwd FROM users WHERE id = ?;`;
+        const result = await mariadb.paramQuery(query, [userId]);
+
+        if (result.length > 0) {
+            return { success: true, userInfo: result[0] };
+        } else {
+            return { success: false, message: 'User not found.' };
+        }
+    } catch (error) {
+        console.error('Error getting user info:', error);
+        return { success: false, message: 'An internal error occurred.' };
+    }
 }
 
 /*================================ Stores - App ================================ */
@@ -362,6 +395,48 @@ export async function updateSaleStock(id, newStockStatus) {
     } catch (error) {
         console.error('Error updating stock status:', error);
         throw new Error('An error occurred while updating stock status.');
+    }
+}
+
+/*================================ Update ================================ */
+
+export async function updateCredentials(userId, newUsername=null, hashedNewPassword=null) {
+    try {
+        // Check if new username or email already exists
+        const userExistQuery = `SELECT COUNT(*) AS count FROM users WHERE ((username = ? OR email = ?) AND id != ?);`;
+        const userExistResult = await mariadb.paramQuery(userExistQuery, [newUsername, newUsername, userId]);
+
+        if (userExistResult[0].count > 0) {
+            return { success: false, message: 'Username or email already in use' };
+        }
+
+        // If new credentials are valid, update the user's credentials
+        let updateCredentialsQuery = 'UPDATE users SET ';
+        const params = [];
+
+        if (newUsername) {
+            updateCredentialsQuery += 'username = ?, ';
+            params.push(newUsername);
+        }
+
+        if (hashedNewPassword) {
+            updateCredentialsQuery += 'passwd = ?, ';
+            params.push(hashedNewPassword);
+        }
+
+        updateCredentialsQuery = updateCredentialsQuery.slice(0, -2);  // Remove the last comma and space
+        updateCredentialsQuery += ' WHERE id = ?;';
+        params.push(userId);
+
+        await mariadb.paramQuery(updateCredentialsQuery, params);
+
+        // Commit the changes
+        await mariadb.commit();
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating credentials:', error);
+        return { success: false, message: 'An internal error occurred' };
     }
 }
 

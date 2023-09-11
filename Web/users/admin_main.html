@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en" style="position: relative;height: 814px;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=yes">
+    <title>web2023_admin_productdata</title>
+    <link rel="stylesheet" href="/adm_assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/adm_assets/css/Acme.css">
+    <link rel="stylesheet" href="/adm_assets/css/Actor.css">
+    <link rel="stylesheet" href="/adm_assets/css/Akaya%20Telivigala.css">
+    <link rel="stylesheet" href="/adm_assets/css/Akshar.css">
+    <link rel="stylesheet" href="/adm_assets/css/Alata.css">
+    <link rel="stylesheet" href="/adm_assets/css/Alatsi.css">
+    <link rel="stylesheet" href="/adm_assets/css/Navbar-With-Button-icons.css">
+</head>
+
+<body style="height: 814px;position: relative;margin: 0px 0px 0px;width: 1277px;background: url(&quot;/adm_assets/img/white%20background.jpg&quot;) no-repeat;background-size: auto;"><img style="margin: 10px 10px;width: 64px;height: 64px;position: relative;" width="100" height="80" src="/adm_assets/img/8033099971580816655-128.png">
+    <button class="btn btn-primary" id="profilesettings_button" type="button" style="display: grid;margin: -60px 1100px;width: 150px;height: 38px;text-align: center;font-family: Alata, sans-serif;position: relative;">Profile Settings</button>
+    <h1 style="width: 320px;display: inline-block;margin: 13px 80px 8px;font-size: 40px;position: relative;">Welcome Admin!</h1>
+    <div style="width: 1191px;margin: 20px -20px 20px 20px;margin-right: 42px;padding-right: 0px;padding-left: 32px;">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation" id="products_tab" style="width: 150px;height: 60px;margin: 0px 0px 0px 10px;"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1" style="border-top-left-radius: 4px;border-top-right-radius: 4px;border-bottom-right-radius: 4px;border-bottom-left-radius: 4px;margin: 0px;background: url(&quot;/adm_assets/img/14957230881678785316-128.png&quot;) center / contain no-repeat, transparent;height: 60px;"></a></li>
+            <li class="nav-item" role="presentation" id="categories_tab" style="width: 150px;height: 60px;margin: 0px 0px 0px 10px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2" style="height: 60px;background: url(&quot;/adm_assets/img/categories.png&quot;) center / contain no-repeat;"></a></li>
+            <li class="nav-item" role="presentation" id="stores_tab" style="margin: 0px 0px 0px 10px;width: 150px;height: 60px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-3" style="height: 60px;background: url(&quot;/adm_assets/img/8015517251578289043-128.png&quot;) center / contain no-repeat;"></a></li>
+            <li class="nav-item" role="presentation" id="stats_tab" style="margin: 0px 0px 0px 10px;width: 150px;height: 60px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-4" style="height: 60px;background: url(&quot;/adm_assets/img/544378381639220039-128.png&quot;) center / contain no-repeat;"></a></li>
+            <li class="nav-item" role="presentation" id="leaders_tab" style="margin: 0px 0px 0px 10px;width: 150px;height: 60px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-5" style="height: 60px;background: url(&quot;/adm_assets/img/leaderboard2.png&quot;) center / contain no-repeat;"></a></li>
+            <li class="nav-item" role="presentation" id="chmode_tab" style="margin: 0px 0px 0px 10px;width: 150px;height: 60px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-6" style="height: 60px;margin: 0px;background: url(&quot;/adm_assets/img/781752361582955604-128.png&quot;) center / contain no-repeat;"></a></li>
+            <li class="nav-item" role="presentation" id="logout_tab" style="margin: 0px 0px 0px 10px;width: 150px;"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-7" style="height: 60px;background: url(&quot;/adm_assets/img/logout2.png&quot;) center / contain no-repeat;"></a></li>
+        </ul>
+        <div class="tab-content" style="margin: 10px 0px 0px 0px;">
+            <div class="tab-pane active" role="tabpanel" id="tab-1">
+                <div class="table-responsive" id="products_table" style="opacity: 1;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15px;position: relative;text-align: center;"></th>
+                                <th style="width: 50px;position: relative;text-align: center;">ID</th>
+                                <th style="width: 220px;position: relative;text-align: center;">NAME</th>
+                                <th style="width: 80px;position: relative;text-align: center;">AVG PRICE YESTERDAY</th>
+                                <th style="width: 100px;position: relative;text-align: center;">SUBCATEGORY</th>
+                                <th style="width: 100px;position: relative;text-align: center;">CATEGORY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products_tbody"></tbody>
+                    </table>
+                </div>
+                <button id="delprods_button" class="btn btn-primary" type="button" style="width: 105px;margin-bottom: -50px;">DELETE</button>
+                <form style="width: 600px;margin-left: 600px;" action="/admin/uploadprods" method="POST" enctype="multipart/form-data">
+                    <input class="form-control" type="file" name="file" style="width: 450px;">
+                    <input class="btn btn-primary" type="submit" value="Upload File" style="margin-left: 490px;margin-top: -67px;">
+                </form>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-2" style="opacity: 1;">
+                <div class="table-responsive" id="categories_table" style="opacity: 1;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15px;position: relative;"></th>
+                                <th style="width: 85px;position: relative;">ID</th>
+                                <th style="width: 200px;position: relative;">NAME</th>
+                                <th style="width: 100px;position: relative;">CATEGORY ID</th>
+                                <th style="width: 150px;position: relative;">CATEGORY NAME</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories_tbody"></tbody>
+                    </table>
+                </div>
+                <button id="delcats_button" class="btn btn-primary" type="button" style="width: 105px;margin-bottom: -50px;">DELETE</button>
+                <form style="width: 600px;margin-left: 600px;" action="/admin/uploadcats" method="POST" enctype="multipart/form-data">
+                    <input class="form-control" type="file" name="file" style="width: 450px;">
+                    <input class="btn btn-primary" type="submit" value="Upload File" style="margin-left: 490px;margin-top: -67px;">
+                </form>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-3">
+                <div class="table-responsive" id="stores_table" style="opacity: 1;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15px;position: relative;"></th>
+                                <th style="width: 85px;position: relative;">ID</th>
+                                <th style="width: 85px;position: relative;">LATITUDE</th>
+                                <th style="width: 85px;position: relative;">LONGITUDE</th>
+                                <th style="width: 100px;position: relative;">NAME</th>
+                                <th style="width: 100px;position: relative;">OPENING HOURS</th>
+                                <th style="width: 100px;position: relative;">SHOP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stores_tbody"></tbody>
+                    </table>
+                </div>
+                <button id="delstores_button" class="btn btn-primary" type="button" style="width: 105px;margin-bottom: -50px;">DELETE</button>
+                <form style="width: 600px;margin-left: 600px;" action="/admin/uploadstores" method="POST" enctype="multipart/form-data">
+                    <input class="form-control" type="file" name="file" style="width: 450px;">
+                    <input class="btn btn-primary" type="submit" value="Upload File" style="margin-left: 490px;margin-top: -67px;">
+                </form>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-4">
+                <div class="container">
+                    <div class="dropdown" style="margin-left: 120px;width: 70px;">
+                        <button id="yearDropdown_button" class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="margin-left: 0px;">Year</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText(2020, 'year')">2020</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText(2021, 'year')">2021</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText(2022, 'year')">2022</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText(2023, 'year')">2023</a>
+                        </div>
+                    </div>
+                    <div class="dropdown" style="margin-top: -38px;margin-left: 0px;width: 120px;">
+                        <button id="monthDropdown_button" class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="margin-top: 0px;">Month</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('January', 'month')">January</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('February', 'month')">February</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('March', 'month')">March</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('April', 'month')">April</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('May', 'month')">May</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('June', 'month')">June</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('July', 'month')">July</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('August', 'month')">August</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('September', 'month')">September</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('October', 'month')">October</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('November', 'month')">November</a>
+                            <a class="dropdown-item" href="#" onclick="changeDropdownButtonText('December', 'month')">December</a>
+                        </div>
+                    </div>
+                    <p style="width: 481px;height: 29px;margin-top: -32px;margin-left: 241px;font-size: 18px;background: url('https://cdn.bootstrapstudio.io/placeholders/1400x800.png');">
+                        Please select month and year to construct the sales graph.</p>
+                    <button id="refreshChart1_button" class="btn btn-primary" type="button" style="width: 24px;height: 24px;margin-top: -95px;margin-left: 204px;background: url(&quot;/adm_assets/img/293271_replay_restart_refresh_icon.png&quot;) center / contain;"></button>
+                    <div id="chartContainer">
+
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="tab-5">
+                <p>Content for tab 5.</p>
+            </div>
+        </div>
+    </div>
+    <script src="/adm_assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    
+<!-- Custom scripts -->
+<script type="text/javascript">
+    //variable initialization
+    let fetched_products = false;
+    let fetched_stores = false;
+    let fetched_categories = false;
+    let fetched_stats = false;
+    let fetched_leaderboard = false;
+    let user_mode = false;
+
+    //interactive DOM elements 
+    //TABS
+    let productstab = document.getElementById("products_tab");
+    let categoriestab = document.getElementById("categories_tab");
+    let storestab = document.getElementById("stores_tab");
+    let statstab = document.getElementById("stats_tab");
+    let leaderstab = document.getElementById("leaders_tab");
+    let modetab = document.getElementById("chmode_tab");
+    let logouttab = document.getElementById("logout_tab");
+
+    //BUTTONS
+    let profsettings_btn = document.getElementById("profilesettings_button"); 
+    let deleteproducts_btn = document.getElementById("delprods_button"); 
+    let deletecategories_btn = document.getElementById("delcats_button"); 
+    let deletestores_btn = document.getElementById("delstores_button");
+    let refreshchart1_btn = document.getElementById("refreshChart1_button");
+    let monthdropdown_btn = document.getElementById("monthDropdown_button");
+    let yeardropdown_btn =  document.getElementById("yearDropDown_button");
+    
+
+    //------------------ FETCH API ----------------------//
+    async function fetchAPI(url, method, data = {}) {
+        const requestOptions = {
+            method: method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        if (method !== "GET") {
+            requestOptions.body = JSON.stringify(data);
+        }
+        return await fetch(url, requestOptions)
+            .then(response => response.json())
+            .catch(error => {
+                console.error(error);
+                throw new Error('Something went wrong. Please try again later.');
+            });
+    }
+
+    //---------- Show Tables Functions ---------------//
+    function populateProductsTable(){
+        //table to be populated
+        const prodtable = document.getElementById("products_tbody");
+        prodtable.innerHTML = "";
+        //bring db data
+        let products = fetchAPI('/admin/products', "GET");
+        products.then((res) => {
+            //check if response was returned correctly
+            if ((res) !== 'undefined') {
+                //DYNAMIC TABLE CONSTRUCTION: for each item in the products table of the res json object, 
+                //create a row with the correct fields
+                //(if your table body contains junk data, you can clear it with tablebody.innerHTML = '';)
+                res.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="width:20px; position: relative;"><input type="checkbox" name="productCheckbox"></td>
+                        <td style="width: 70px; position: relative; text-align: center;">${item.id}\t\t\t</td>
+                        <td style="width:400px; position: relative;">${item.pnm}</td>
+                        <td style="width:200px;position: relative; text-align: center;">${item.avgprice_yesterday}</td>
+                        <td style="width: 180px; position: relative;">${item.snm}</td>
+                        <td style="width: 180px; position: relative; text-align: center;">${item.cnm}</td>
+                    `;
+                    prodtable.appendChild(row);
+                });   
+                fetched_products = true;             
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+    
+    function populateCategoriesTable(){
+        const cattable = document.getElementById("categories_tbody");
+        //bring db data
+        let categories = fetchAPI('/admin/subcategories', "GET");
+        categories.then((res) => {
+            if (res !== 'undefined'){
+                res.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="checkbox" name="subcategoryCheckbox"></td>
+                        <td>${item.id}</td>
+                        <td>${item.subname}</td>
+                        <td>${item.categories_id}</td>
+                        <td>${item.name}</td>
+                        
+                    `;
+                    cattable.appendChild(row);
+                            
+                });
+                fetched_categories = true;   
+            }
+        })
+    }
+    
+    function populateStoresTable(){
+        const storestable = document.getElementById("stores_tbody");
+
+        //get post or what??
+        let stores = fetchAPI('/admin/stores', "GET");
+        stores.then((res) => {
+            //code for table construction here
+            if ((res) !== 'undefined') {
+                console.log(res);
+                //DYNAMIC TABLE CONSTRUCTION
+                res.forEach(item => {
+                    const row = document.createElement('tr');
+                    if (item.name == null) item.name = "unknown";
+                    row.innerHTML = `
+                        <td><input type="checkbox" name="storeCheckbox"></td>
+                        <td>${item.id}</td>
+                        <td>${item.lat}</td>
+                        <td>${item.lon}</td>
+                        <td>${item.name}</td>
+                    `;                    
+                    storestable.appendChild(row);        
+                });
+
+                fetched_stores = true;
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
+    }
+
+
+    //---------------- Delete From Table ---------------//
+    function deleteProducts(){
+        const selectedRows = document.querySelectorAll("input[name='productCheckbox']:checked");
+        const selectedIds = Array.from(selectedRows).map(row => parseInt(row.parentElement.nextElementSibling.textContent));
+
+        // Send a request to the Express.js server to delete the selected products
+        let todel = fetchAPI('/admin/delprods', "POST", selectedIds);
+        //promise pending??
+        todel.then((res) => {
+            console.log(res, " at least something is working now");
+        })
+    }
+
+    function deleteCategories(){
+        const selectedRows = document.querySelectorAll("input[name='subcategoryCheckbox']:checked");
+        const selectedIds = Array.from(selectedRows).map(row => parseInt(row.parentElement.nextElementSibling.textContent));
+
+        // Send a request to the Express.js server to delete the selected products
+        let todel = fetchAPI('/admin/delcats', "POST", selectedIds);
+        todel.then((response) => {
+        if (response.ok) {
+            selectedRows.forEach(row => {
+                let rowToDelete = row.closest("tr");
+                rowToDelete.remove();
+            })
+            fetched_categories = false;
+            populateCategoriesTable();
+        } else {
+            console.error("Failed to delete products");
+        }
+        });
+    }
+
+    function deleteStores(){
+        const selectedRows = document.querySelectorAll("input[name='storeCheckbox']:checked");
+        const selectedIds = Array.from(selectedRows).map(row => parseInt(row.parentElement.nextElementSibling.textContent));
+
+        // Send a request to the Express.js server to delete the selected products
+        let todel = fetchAPI('/admin/delstores', "POST", selectedIds);
+        todel.then((response) => {
+        if (response.ok) {
+            selectedRows.forEach(row => {
+                let rowToDelete = row.closest("tr");
+                rowToDelete.remove();
+            })
+            fetched_stores = false;
+            populateStoresTable();
+        } else {
+            console.error("Failed to delete products");
+        }
+        });
+    }
+    
+    //-------------- Graph Functions -----------------//
+    function salesGraph(month, year){  
+        document.getElementById("chartContainer").innerHTML='';
+        let stats= fetchAPI('/admin/stats', "POST", [getMonthNumberFromName(month), year]);
+        stats.then((res) => {
+            //chart code
+        })
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title:{
+                text: `Number if Sales in ${month} of ${year}` 
+            },
+            axisY: {
+                title: "Sales Number"
+            },
+            data: [{        
+                type: "column",  
+                showInLegend: true, 
+                legendMarkerColor: "grey",
+                //legendText: "MMbbl = one million barrels",
+                /*dataPoints: [      
+                    { y: 300878, label: "Venezuela" },
+                    { y: 266455,  label: "Saudi" },
+                    { y: 169709,  label: "Canada" },
+                    { y: 158400,  label: "Iran" },
+                    { y: 142503,  label: "Iraq" },
+                    { y: 101500, label: "Kuwait" },
+                    { y: 97800,  label: "UAE" },
+                    { y: 80000,  label: "Russia" }
+                ]*/
+            }]
+        });
+        chart.render();
+    }
+    
+ 
+
+    //------------- Event Listeners -------------------//
+    function initializeTabEventListeners(){
+        //every time the page is loaded, we bring products and categories. 
+        //the tab listeners for the products and categories tabs might seem unecessary, 
+        //but what if the admin was in another tab when he left the page and then returned? can i force a tab to be selected when i initialize the page?
+        productstab.addEventListener('click', ()=> {
+            if (fetched_products == false){
+                populateProductsTable();
+            }
+        });
+
+        categoriestab.addEventListener('click', ()=> {
+            if (fetched_categories==false){
+                populateCategoriesTable();
+            }
+        });
+        
+        storestab.addEventListener('click', () => {
+            if (fetched_stores == false){
+                populateStoresTable();
+            }
+        });
+
+        leaderstab.addEventListener('click', () => {
+            console.log("code for leaderboard will go here");
+        });
+
+        modetab.addEventListener('click', () => {
+            //if in admin mode, redirect to user page 
+            if (user_mode == false){
+                window.location.href = '/users/homepage.html';
+                user_mode = true;
+            }
+            //we need a button in the homepage to return back to admin_main.html
+            else {
+                window.location.href = '/admin/admin_main.html';
+                user_mode = true;
+            }
+        })
+        
+        logouttab.addEventListener('click', () => {
+            console.log("code for logout will go here.")
+            //express is not using router for logout yet, so it is not ready
+        })
+    }
+
+    function initializeButtonEventListeners(){
+        profsettings_btn.addEventListener('click', () => {
+            //redirect to profile settings page
+            console.log('Redirecting to Home Page');
+              window.location.href = '/users/homepage.html';
+        });
+
+        deleteproducts_btn.addEventListener('click', ()=>{
+            deleteProducts();
+        });
+
+        deletecategories_btn.addEventListener('click', () => {
+            deleteCategories();
+        });
+
+        deletestores_btn.addEventListener('click', ()=> {
+            deleteStores();
+        });
+
+        refreshchart1_btn.addEventListener('click', ()=>{
+            let month = getDropdownButtonText('month');
+            let year = getDropdownButtonText('year');
+            if (month !== 'Month' && year!== 'Year') {
+                salesGraph(month, year);
+            }
+        })
+    }
+    
+    //===============Helping Functions=================//
+    function changeDropdownButtonText(value, option){
+        if (option == 'month'){
+            monthDropdown_button.textContent = value;
+        }else {
+            yearDropdown_button.textContent = value;
+        }    
+    }
+
+    function getDropdownButtonText(option){
+        let value = "";
+        if (option == 'month'){
+            value = monthDropdown_button.textContent;
+        }else {
+            value = yearDropdown_button.textContent;
+        }
+        return value;
+    }
+   
+    function getMonthNumberFromName(monthName) {
+        return new Date(`${monthName} 1, 2022`).getMonth() + 1;
+    }
+    //-------------- Execution Logic ------------------//
+    //if products table is empty, fill the table with the data from the json file
+    if (fetched_products==false) {
+        populateProductsTable();
+    }
+
+    //lastly, initialize event listeners
+    initializeTabEventListeners();
+    initializeButtonEventListeners();
+
+</script>
+</body>
+
+</html>

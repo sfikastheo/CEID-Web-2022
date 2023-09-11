@@ -12,6 +12,7 @@ import { routerUsers } from './routes/users.mjs';
 import { routerStores } from './routes/stores.mjs';
 import { routerCategories } from './routes/categories.mjs';
 import { routerSales } from './routes/sales.mjs';
+import { adminRouter } from './routes/admin.mjs';
 
 // Import the needed functions
 import { storesToGeoJson, tableInfo } from './dbToNode.mjs';
@@ -45,6 +46,22 @@ export function auth(req, res, next) {
 	}
 }
 
+//admin authorization middleware
+export function adminauth(req, res, next) {
+	if (req.session.userId && req.session.adminpriv) {
+		// Update the cookie's max age to extend the session validity
+    res.cookie("authToken", req.sessionID, {
+			maxAge: 60000,
+			sameSite: "None",
+			secure: false,
+		});
+
+		next(); // User is authenticated, continue to the next middleware/route
+	} else {
+    res.status(401) // User is not authenticated,
+		res.redirect('/login.html'); // redirect to the login page
+	}
+}
 // 1. Consider creating a errorhandler middleware
 // https://expressjs.com/en/guide/error-handling.html
 
@@ -154,6 +171,7 @@ server.use('/api/categories', auth, routerCategories);
 server.use('/api/sales', auth, routerSales);
 
 server.use('/users/', auth, routerUsers);
+server.use('/admin', adminauth, adminRouter);
 
 // The use function on the server will be executed
 // For every request, if a server.use call is used

@@ -51,7 +51,7 @@ routerUsers.get('/info', async (req, res) => {
   });
 });
 
-routerUsers.get('/logout', (req, res) => {
+routerUsers.post('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('authToken');
   res.redirect('/login.html');
