@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>haggle</title>
+    <!-- Title icon -->
+    <link rel="icon" href="/img/location-dot.svg" type="image/x-icon" />
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@100&family=Roboto&display=swap"
+        rel="stylesheet">
+
+    <!-- Include Leaflet CSS file in the head section of your html Document -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <!-- Include Leaflet Js file after leaflet's css -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin="">
+        </script>
+</head>
+
+<body id="page-top"">
+    <!-- First Popper.js, then Bootstrap JS. In case Jquery is used It needs to be loaded first-->
+    <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <section class="vh-100">
+        <div class="row h-100 m-0 p-0 d-flex flex-row">
+            <!-- Main page -->
+            <div class="col m-0 p-0">
+                <div style="flex-grow: 1;">
+                    <div class="d-flex flex-column">
+                        <div id="content">
+                            <!-- The topbar -->
+                            <nav class="navbar navbar-expand bg-white topbar static-top navbar-light">
+
+                                <div class="container-fluid">
+                                    <!-- Logo and Name -->
+                                    <div class="d-flex justify-content-center align-items-center ml-4">
+                                        <i class="fa-solid fa-location-dot fa-xl my-0"></i>
+                                        <h3 class="ml-2 mx-3 my-0">haggle </h3>
+                                    </div>
+
+                                    <!-- Search fields if window is large enough -->
+                                    <form class="me-auto mw-100 navbar-search d-sm-flex d-none">
+                                        <div class="input-group" style="padding-right: 20px;">
+                                            <input id="storeNameExtendedInput"
+                                                class="custom-focus form-control bg-light border-0 small" type="text"
+                                                placeholder="Search for stores">
+                                            <button id="storeNameExtendedButton"
+                                                class="custom-active btn btn-primary py-0" style="border: 0px;"
+                                                type="button"><i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group">
+                                            <input id="storeCategoryExtendedInput"
+                                                class="custom-focus form-control bg-light border-0 small" type="text"
+                                                placeholder="Search for products" readonly>
+                                            <div id='storeCategoryExtendedDropdown'
+                                                class="dropdown-menu dropdown-menu-up p-3 animated--grow-in"
+                                                style="margin-top: 53px;">
+                                                <a class="custom-active dropdown-item" href="#">
+                                                    &nbsp;Search for products
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <div id="storeCategoryExtendedDropList" class="w-100 me-auto">
+                                                    <!-- Element List to be filled dynamically -->
+                                                </div>
+                                            </div>
+                                            <button id="storeCategoryExtendedButton"
+                                                class="custom-active btn btn-primary py-0" style="border: 0px;"
+                                                type="button"><i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <ul class="navbar-nav flex-nowrap ms-auto">
+                                        <!-- Search fields if searches are collapsed -->
+                                        <li class="nav-item dropdown d-sm-none no-arrow">
+                                            <a class="dropdown-toggle nav-link" aria-expanded="false"
+                                                data-bs-toggle="dropdown" href="#">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
+                                                aria-labelledby="searchDropdown">
+                                                <form class="me-auto navbar-search w-100">
+                                                    <div class="input-group" style="padding-bottom: 20px;">
+                                                        <input id="storeNameCollapsedInput"
+                                                            class="custom-focus form-control bg-light border-0 small"
+                                                            type="text" placeholder="Search for stores">
+                                                        <div class="input-group-append">
+                                                            <button id="storeNameCollapsedButton"
+                                                                class="custom-active btn btn-primary py-0"
+                                                                style="border: 0px;" type="button"><i
+                                                                    class="fas fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input id="storeCategoryCollapsedInput"
+                                                            class="custom-focus form-control bg-light border-0 small"
+                                                            type="text" placeholder="Search for products" readonly>
+                                                        <div id='storeCategoryCollapsedDropdown'
+                                                            class="dropdown-menu dropdown-menu-up p-3 animated--grow-in"
+                                                            style="margin-top: 53px;">
+                                                            <a class="custom-active dropdown-item" href="#">
+                                                                &nbsp;Search for products
+                                                            </a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <div id="storeCategoryCollapsedDropList"
+                                                                class="w-100 me-auto">
+                                                                <!-- Element List to be filled dynamically -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-group-append">
+                                                            <button id="storeCategoryCollapsedButton"
+                                                                class="custom-active btn btn-primary py-0"
+                                                                style="border: 0px;" type="button">
+                                                                <i class="fas fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </li>
+                                        <div class="d-none d-sm-block topbar-divider"></div>
+                                        <!-- Nav Item - User Information -->
+                                        <li class="nav-item dropdown no-arrow">
+                                            <div class="dropdown no-arrow">
+                                                <a class="dropdown-toggle nav-link" aria-expanded="false"
+                                                    data-bs-toggle="dropdown" href="#">
+                                                    <span id="username_span"
+                                                        class="d-none d-lg-inline me-2 text-gray-600 small">Username
+                                                    </span>
+                                                    <i class="fa-solid fa-address-card"></i>
+                                                </a>
+                                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                                    <a class="custom-active dropdown-item" href="/users/profile.html">
+                                                        <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                                                        &nbsp;Profile
+                                                    </a>
+                                                    <a class="custom-active dropdown-item" href="#">
+                                                        <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                                                        &nbsp;Settings
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="custom-active dropdown-item" href="#" onclick="logout()">
+                                                        <i
+                                                            class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                                        &nbsp;Logout
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="container-fluid" style="padding: 0;">
+                                <!-- Map -->
+                                <div id="map" style="height: 100vh; position: relative;">
+                                    <div class="map-utils d-flex flex-column">
+                                        <button id="focusUserLocationBtn" class="custom-active btn btn-primary py-0"
+                                            style="border: 0px;" type="button">
+                                            <i class="fa-solid fa-compass fa-lg" style="color: white;"></i>
+                                        </button>
+                                    </div>
+                                    <!-- Card Information -->
+                                    <div id="card_info"
+                                        class="card map-info col-xxl-5 col-xl-6 col-lg-7 col-md-9 col-12 d-none animated--grow-in"
+                                        style="border-radius: 1rem;">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-solid fa-shop fa-lg"></i>
+                                                <h4 id="card_storeName" class="ml-2 mx-3 my-0">Store</h4>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <!-- Add Sale Button -->
+                                                <div id="card_addSaleDropdownDiv" class="dropdown no-arrow m-0 p-0">
+                                                    <button id="card_addSaleBtn"
+                                                        class="custom-active btn btn-primary px-2"
+                                                        style="border: 0px; margin-right: 4px;">
+                                                        <i class="fas fa-plus fa-sm" style="color: white;"></i>
+                                                    </button>
+                                                    <div id='card_customDropDown'
+                                                        class="custom-dropDown dropdown-menu dropdown-menu-end p-3 animated--grow-in">
+                                                        <!-- Element List to be filled dynamically -->
+                                                        <div id="card_addSaleDropdownItems"
+                                                            class="w-100 me-auto d-none">
+                                                        </div>
+                                                        <!-- Sale Price input element -->
+                                                        <form id="card_addSalePriceForm"
+                                                            class="me-auto w-100 d-none d-flex align-items-center">
+                                                            <div class="input-group" style="padding-bottom: 5px;">
+                                                                <div style="flex: 1;">
+                                                                    <input id="card_addSalePriceInput"
+                                                                        class="bg-light form-control border-0 small"
+                                                                        type="text" placeholder="Price..."
+                                                                        style="width: 100%; font-size: 14px;">
+                                                                    <!-- Width is set to 100% -->
+                                                                </div>
+                                                                <div class="input-group-append">
+                                                                    <button id="card_submitSalePriceButton"
+                                                                        class="custom-active btn btn-primary bg-custom-green py-0"
+                                                                        style="border: 0px;" type="button">
+                                                                        <i class="fas fa-plus"
+                                                                            style="color: white;"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- Back to SalesList Button -->
+                                                <button id="card_backBtn"
+                                                    class="custom-active btn btn-primary px-2 d-none"
+                                                    style="border: 0px; margin-right: 4px;">
+                                                    <i class="fas fa-solid fa-circle-left fa-sm"
+                                                        style="color: white;"></i>
+                                                </button>
+                                                <!-- Close Card Button -->
+                                                <button id="card_closeBtn" class="custom-active btn btn-primary px-2"
+                                                    style="border: 0px;">
+                                                    <i class="fas fa-xmark fa-sm" style="color: white;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="card_body" class="card-body"
+                                            style="max-height: 100%; overflow-y: auto;">
+                                            <!-- Sale List -->
+                                            <div id="card_salesList">
+                                                <!-- This gets filled dynamically -->
+                                            </div>
+                                            <div id="card_detailedSale" class="d-none">
+                                                <!-- Detailed Sale Information -->
+                                                <div class="row p-0 m-0 g-0">
+                                                    <h6 id="cardDetails_productName">Product Name</h6>
+                                                    <div class="col d-md-block m-4">
+                                                        <img id="cardDetails_productImage" class="img-fluid rounded"
+                                                            src="" alt="Product Image" />
+                                                    </div>
+                                                    <div class="col">
+                                                        <!-- Product Information -->
+                                                        <ul style="font-size: 16px;">
+                                                            <li>Price: <span id="cardDetails_productPrice"></span></li>
+                                                            <li>In stock: <input id="cardDetails_stockToggle"
+                                                                    type="checkbox" class="form-check-input" value="">
+                                                            </li>
+                                                            <li>Special offer:
+                                                                <i id="cardDetails_specialOfferIcon"
+                                                                    class="fa-solid fa-star fa-sm"></i>
+                                                                <span id="cardDetails_specialOfferText"></span>
+                                                            </li>
+                                                            <li>Submitted By: <span id="cardDetails_submittedBy"></span>
+                                                            </li>
+                                                            <li>Submission Date: <span
+                                                                    id="cardDetails_submissionDate"></span>
+                                                            </li>
+                                                            <li>User's Score: <span
+                                                                    id="cardDetails_submittedByUserScore"></span>
+                                                            </li>
+                                                            <div class="d-flex mt-2" style="font-size: 12px;">
+                                                                <button id="cardDetails_likeBtn"
+                                                                    class="custom-active btn btn-primary"
+                                                                    style="border: 0px;" type="button">
+                                                                </button>
+                                                                <button id="cardDetails_dislikeBtn"
+                                                                    class="btn btn-danger"
+                                                                    style="border: 0px; margin-left: 2px;"
+                                                                    type="button">
+                                                                </button>
+                                                            </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="bg-white sticky-footer">
+                                    <div class="container my-auto">
+                                        <div class="text-center my-auto copyright"><span>Copyright © haggle 2023</span>
+                                        </div>
+                                    </div>
+                                </footer>
+                                <!-- Button to scroll to top of page -->
+                            </div>
+                            <a class="custom-active border rounded d-inline scroll-to-top" href="#page-top">
+                                <i class="fas fa-angle-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+    </section>
+
+    <!-- Bootstrap -->
+    <script src="/js/script.min.js"></script>
+
+    <!-- Custom scripts -->
+    <script type="text/javascript">
+
+        // ============================  Fetch Functions  ============================
+
+        async function fetchAPI(url, method, data = {}) {
+            const requestOptions = {
+                method: method,
+                credentials: 'include',
+                redirect: 'follow',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+            if (method !== "GET") {
+                requestOptions.body = JSON.stringify(data);
+            }
+            return await fetch(url, requestOptions)
+                .then(async (response) => {
+                    if (response.status === 401) {
+
+                        console.error('Unauthorized access.');
+                        alert('Session expired. Please login again.');
+                        // Redirect to the login page
+                        window.location.href = '/login.html';
+                        return Promise.reject('Unauthorized access');
+                    }
+
+                    if (!response.ok) {
+                        // Handle other errors
+                        console.error(`Error: ${response.status}`);
+                        throw new Error('Something went wrong. Please try again later.');
+                    }
+
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error(error);
+                    throw new Error('Something went wrong. Please try again later.');
+                });
+        }
+
+        // =============================  Helper Functions  =============================
+
+        // Function to check if a touch device is used
+        function isTouchDevice() {
+            return 'ontouchstart' in document.documentElement;
+        }
+
+        // Function to clear children elements of a DOM element
+        function clearChildrenElements(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
+
+        // Function to calculate distance between two coordinates using Haversine formula
+        function calculateDistance(lon1, lat1, lon2, lat2) {
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) *
+                Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in km
+            const meters = distance * 1000; // Convert to meters
+            return meters;
+        }
+
+        // ==============================  Execute Logic  ==============================
+
+        let stores = fetchAPI("/api/stores", "GET");
+
+        // Fetch userName
+        let username = fetchAPI("/users/username", "GET");
+        username.then((res) => {
+            if (typeof res !== 'undefined') {
+                document.getElementById('username_span').textContent = res;
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
+        const startLocation = { lat: 38.24638, lng: 21.73505 };
+        const map = L.map('map', { zoomControl: false }).setView(startLocation, 18);
+        var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+        });
+        OpenStreetMap_HOT.addTo(map);
+
+        // Layer Group to store markers. This is important because the layer can be cleared in an instant
+        const storesMarkersLayerGroup = L.layerGroup().addTo(map);
+
+        // Keep track of some user's action states:
+        let chosenStore = null;
+        let chosenProduct = null;
+        let chosenSale = null;
+        // ===================== Stores =====================
+
+        const storeIcon = L.icon({
+            iconUrl: '/img/location-dot.svg',
+            className: 'fa-icon',
+            iconSize: [36, 36],
+            iconAnchor: [18, 26],
+        });
+
+        let storesMarkerLayer = null
+        stores.then((res) => {
+            if ((res) !== 'undefined' && res.features.length > 0) {
+                storesLayer = createStoreLayer(res);
+                storesMarkersLayerGroup.addLayer(storesLayer);
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
+        // Fetch information about a store by its ID
+        function fetchStoreSalesById(storeId) {
+            return fetchAPI(`/api/stores/${storeId}`, "GET");
+        }
+
+        // Function to create a marker layer from a GeoJson object 
+        function createStoreLayer(geoJson) {
+            let layer = L.geoJSON(geoJson, {
+                pointToLayer: function (feature, latlng) {
+                    let marker_opacity = (feature.properties.sale_exists) ? 1 : 0.4;
+                    return L.marker(latlng, {
+                        opacity: marker_opacity,
+                        icon: storeIcon
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    let storeLabel = (feature.properties.name || "Unknown");
+
+                    // Click event
+                    layer.on('click', () => {
+                        const storeSales = fetchStoreSalesById(feature.properties.id);
+
+                        storeSales.then((res) => {
+                            if (typeof res !== 'undefined') {
+                                // Display the store info 
+                                displayStoreInfoInCard(feature, res);
+                                chosenStore = feature.properties.id;
+                            }
+                        }).catch(error => {
+                            console.error('Error fetching store information: ', error);
+                        });
+                    });
+
+                    // Mouseover and mouseout events
+                    // Mouseover and mouseout events
+                    layer.on('mouseover', () => {
+                        layer.openPopup();
+                    });
+                    layer.on('mouseout', () => {
+                        layer.closePopup();
+                    });
+                    layer.bindPopup(`<h6>${storeLabel}</h6>`, { closeButton: false, offset: L.point(0, -12) });
+                }
+            });
+            return layer;
+        }
+
+        // ============== Display Store Info ==============
+
+        // Access needed DOM elements:
+        // Sales List
+        const card_info = document.getElementById('card_info');
+        const card_salesList = document.getElementById('card_salesList');
+        const card_detailedSale = document.getElementById('card_detailedSale');
+        const card_storeName = document.getElementById('card_storeName');
+        const card_addSaleDropdownDiv = document.getElementById('card_addSaleDropdownDiv');
+        const card_backBtn = document.getElementById('card_backBtn');
+
+        const card_customDropDown = document.getElementById('card_customDropDown');
+
+        // Function to display the store info 
+        function displayStoreInfoInCard(storeInfo, storeSales) {
+
+            // Clear the previous information
+            clearChildrenElements(card_salesList);
+
+            // Show the card
+            if (card_info.classList.contains('d-none')) {
+                card_info.classList.remove('d-none');
+            }
+
+            // Show the sales list
+            card_salesList.classList.remove('d-none');
+            // Hide everything else 
+            card_backBtn.classList.add('d-none');
+            card_detailedSale.classList.add('d-none');
+
+            if (card_customDropDown.classList.contains('show')) {
+                card_customDropDown.classList.remove('show');
+            }
+
+            map.scrollWheelZoom.disable();
+            if (isTouchDevice()) {
+                console.log("Touch device");
+                // Prevent map from moving when focus is on the card
+                map.dragging.disable();
+                map.touchZoom.disable();
+                map.doubleClickZoom.disable();
+            }
+
+            // Add the store name 
+            const storeName = (storeInfo.properties.name || 'Unknown');
+            card_storeName.textContent = storeName;
+
+            distanceWithUser = calculateDistance(userLocation.lng, userLocation.lat,
+                storeInfo.geometry.coordinates[0], storeInfo.geometry.coordinates[1]);
+
+            // If distance < 50 show add sale interface
+            if (distanceWithUser < 50) {
+                card_addSaleDropdownDiv.classList.remove('d-none');
+            } else {
+                card_addSaleDropdownDiv.classList.add('d-none');
+            }
+
+            // Display sales if available in storeSales
+            if (storeSales && storeSales.length > 0) {
+                storeSales.forEach(sale => {
+                    const saleItem = document.createElement('div');
+                    saleItem.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+
+                    // Sale left
+                    const saleLeft = document.createElement('div');
+                    // Check if criteria are matched and add a star
+                    if (sale.criteria_ok) {
+                        const starIcon = document.createElement('i');
+                        starIcon.classList.add('fa-solid', 'fa-star');
+                        starIcon.style.marginRight = '8px';
+                        saleLeft.appendChild(starIcon);
+                    } else {
+                        const dotIcon = document.createElement('i');
+                        dotIcon.classList.add('fa-solid', 'fa-circle', 'fa-2xs');
+                        dotIcon.style.marginRight = '8px';
+                        saleLeft.appendChild(dotIcon);
+                    }
+
+                    // Sale Name
+                    const saleName = document.createElement('span');
+                    saleName.textContent = sale.name;
+                    saleName.classList.add('sale-name');
+                    saleName.addEventListener('mouseenter', () => {
+                        saleName.style.textDecoration = 'underline';
+                    });
+                    saleName.addEventListener('mouseleave', () => {
+                        saleName.style.textDecoration = 'none';
+                    });
+                    saleName.addEventListener('click', () => {
+                        displaySaleInfoInCard(sale);
+                    });
+
+                    saleName.style.pointerEvents = 'none';
+
+                    // Sale Price
+                    const salePrice = document.createElement('span');
+                    salePrice.textContent = `${sale.price}€`;
+                    salePrice.classList.add('fw-bold');
+                    salePrice.style.marginLeft = '12px';
+
+                    // Update elements functionality based on user distance
+                    if (distanceWithUser < 50) {
+                        saleName.style.pointerEvents = 'auto';
+                    }
+
+                    const enabled = sale.stock && (distanceWithUser < 50);
+                    const likeDislikeButtonsContainer = createLikeDislikeButtons(sale, enabled);
+
+                    // Append the elements to the sale item
+                    // Sale Left
+                    saleLeft.appendChild(saleName);
+                    saleLeft.appendChild(salePrice);
+                    // Check if stock is available and add a stock icon
+                    if (sale.stock) {
+                        const stockIcon = document.createElement('i');
+                        stockIcon.classList.add('fa-solid', 'fa-cubes');
+                        stockIcon.style.marginLeft = '4px';
+                        saleLeft.appendChild(stockIcon);
+                    }
+
+                    // saleItem
+                    saleItem.appendChild(saleLeft);
+                    saleItem.appendChild(likeDislikeButtonsContainer);
+
+                    // Append the sale item to the sales list 
+                    card_salesList.appendChild(saleItem);
+                });
+            }
+        }
+
+        function createLikeDislikeButtons(sale, enabled) {
+            const container = document.createElement('div');
+            container.classList.add('d-flex', 'align-items-center');
+
+            const likeButton = document.createElement('button');
+            likeButton.type = 'button'; // Use button type
+            likeButton.classList.add('custom-active', 'btn', 'btn-primary', 'py-0', 'px-2');
+            likeButton.style.marginRight = '4px';
+            likeButton.style.fontSize = '12px';
+            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+
+            const dislikeButton = document.createElement('button');
+            dislikeButton.type = 'button'; // Use button type
+            dislikeButton.classList.add('btn', 'btn-danger', 'py-0', 'px-2');
+            dislikeButton.style.fontSize = '12px';
+            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+
+            if (!enabled) {
+                likeButton.disabled = true;
+                dislikeButton.disabled = true;
+            }
+
+            // Add event listeners for like and dislike buttons
+            likeButton.addEventListener('click', () => {
+                handleLikeClick(sale, likeButton);
+            });
+
+            dislikeButton.addEventListener('click', () => {
+                handleDislikeClick(sale, dislikeButton);
+            });
+
+            container.appendChild(likeButton);
+            container.appendChild(dislikeButton);
+
+            return container;
+        }
+
+        // Handle like button click
+        function handleLikeClick(sale, likeButton) {
+            const id = sale.id;
+
+            if (!sale.liked) {
+                // Use the custom fetchAPI function to add a like
+                fetchAPI(`/api/sales/${id}/like`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.likes_num += 1;
+                            sale.liked = true;
+
+                            // Update the like count in the UI
+                            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                        } else {
+                            if (data.message === 'User already liked the sale') {
+                                // User already liked the sale, update the UI without making a request
+                                sale.likes_num += 1;
+                                sale.liked = true;
+
+                                // Update the like count in the UI
+                                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to add like:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
+            } else {
+                // Use the custom fetchAPI function to remove a like
+                fetchAPI(`/api/sales/${id}/unlike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.likes_num -= 1;
+                            sale.liked = false;
+
+                            // Update the like count in the UI
+                            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                        } else {
+                            if (data.message === 'User already unliked the sale') {
+                                // User already removed the like, update the UI without making a request
+                                sale.likes_num -= 1;
+                                sale.liked = false;
+
+                                // Update the like count in the UI
+                                likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${sale.likes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to remove like:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
+            }
+        }
+
+        // Handle dislike button click
+        function handleDislikeClick(sale, dislikeButton) {
+            const id = sale.id;
+
+            if (!sale.disliked) {
+                // Use the custom fetchAPI function to add a dislike
+                fetchAPI(`/api/sales/${id}/dislike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.dislikes_num += 1;
+                            sale.disliked = true;
+
+                            // Update the dislike count in the UI
+                            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                        } else {
+                            if (data.message === 'User already disliked the sale') {
+                                // User already disliked the sale, update the UI without making a request
+                                sale.dislikes_num += 1;
+                                sale.disliked = true;
+
+                                // Update the dislike count in the UI
+                                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to add dislike:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
+            } else {
+                // Use the custom fetchAPI function to remove a dislike
+                fetchAPI(`/api/sales/${id}/undislike`, 'POST', {})
+                    .then((data) => {
+                        if (data.success) {
+                            // Update the sale object
+                            sale.dislikes_num -= 1;
+                            sale.disliked = false;
+
+                            // Update the dislike count in the UI
+                            dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                        } else {
+                            if (data.message === 'User already undisliked the sale') {
+                                // User already removed the dislike, update the UI without making a request
+                                sale.dislikes_num -= 1;
+                                sale.disliked = false;
+
+                                // Update the dislike count in the UI
+                                dislikeButton.innerHTML = `<i class="fa-solid fa-thumbs-down fa-xs"></i> ${sale.dislikes_num}`;
+                            } else {
+                                // Handle other errors
+                                console.error('Failed to remove dislike:', data.message);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // Handle fetchAPI errors
+                        console.error('Fetch API error:', error);
+                    });
+            }
+        }
+
+        // Sale Details
+        const cardDetails_productName = document.getElementById('cardDetails_productName');
+        const cardDetails_productImage = document.getElementById('cardDetails_productImage');
+        const cardDetails_productPrice = document.getElementById('cardDetails_productPrice');
+        const cardDetails_stockToggle = document.getElementById('cardDetails_stockToggle');
+        const cardDetails_specialOfferIcon = document.getElementById('cardDetails_specialOfferIcon');
+        const cardDetails_specialOfferText = document.getElementById('cardDetails_specialOfferText');
+        const cardDetails_submittedBy = document.getElementById('cardDetails_submittedBy');
+        const cardDetails_submissionDate = document.getElementById('cardDetails_submissionDate');
+        const cardDetails_submittedByUserScore = document.getElementById('cardDetails_submittedByUserScore');
+        const cardDetails_likes = document.getElementById('cardDetails_likeBtn');
+        const cardDetails_dislikes = document.getElementById('cardDetails_dislikeBtn');
+
+        // Function to display Sale information in Card:
+        function displaySaleInfoInCard(sale) {
+            // Update the chosenSale variable
+            chosenSale = sale;
+            // Hide the sales list and show the detailed sale information
+            card_salesList.classList.add('d-none');
+            card_detailedSale.classList.remove('d-none');
+            card_backBtn.classList.remove('d-none');
+
+            // Load the sale information:
+            cardDetails_productName.textContent = sale.name;
+
+            // Set the image background
+            // cardDetails_productImage.src = `/img/products/Καραμολέγκος Παξαμάς Σικαλης 400γρ.jpeg`;
+            cardDetails_productImage.src = `/img/products/${sale.name}.jpeg`;
+
+            cardDetails_productPrice.textContent = `${sale.price}€`;
+            cardDetails_submissionDate.textContent = sale.date_created.split('T')[0];
+            if (sale.stock) {
+                cardDetails_stockToggle.checked = true;
+                cardDetails_dislikes.disabled = false;
+                cardDetails_likes.disabled = false;
+            } else {
+                cardDetails_stockToggle.checked = false;
+                cardDetails_dislikes.disabled = true;
+                cardDetails_likes.disabled = true;
+            }
+
+            // Check if criteria are matched ( Special Offer )
+            if (sale.criteria_ok) {
+                cardDetails_specialOfferIcon.classList.remove('d-none');
+            } else {
+                cardDetails_specialOfferIcon.classList.add('d-none');
+                cardDetails_specialOfferText.textContent = ' No';
+            }
+
+            // Add the like and dislike buttons numbers:
+            cardDetails_likes.innerHTML = `<i class="fas fa-thumbs-up fa-xs" style="color: white;"></i> ${sale.likes_num}`;
+            cardDetails_dislikes.innerHTML = `<i class="fas fa-thumbs-down fa-xs" style="color: white;"></i> ${sale.dislikes_num}`;
+
+            // Add event handlers on button presses:
+            cardDetails_likes.addEventListener('click', () => {
+                handleLikeClick(sale, cardDetails_likes);
+            });
+            cardDetails_dislikes.addEventListener('click', () => {
+                handleDislikeClick(sale, cardDetails_dislikes);
+            });
+
+            // Fetch the sale submitted by User information
+            fetchAPI(`/api/sales/${sale.id}/submittedBy`, "GET").then((res) => {
+                if (typeof res !== 'undefined') {
+                    cardDetails_submittedBy.textContent = res[0].username;
+                    cardDetails_submittedByUserScore.textContent = res[0].sum_score;
+                }
+            }).catch(error => {
+                console.error('Error fetching user information: ', error);
+            });
+
+        }
+
+        // Back to SaleList button
+        card_backBtn.addEventListener('click', () => {
+            card_detailedSale.classList.add('d-none');
+            card_salesList.classList.remove('d-none');
+            card_backBtn.classList.add('d-none');
+        });
+
+        // Close card button event listener
+        const card_closeBtn = document.getElementById('card_closeBtn');
+        card_closeBtn.addEventListener('click', () => {
+            card_info.classList.add('d-none');
+
+            map.scrollWheelZoom.enable();
+            if (isTouchDevice()) {
+                // Enable map movement
+                map.dragging.enable();
+                map.touchZoom.enable();
+                map.doubleClickZoom.enable();
+            }
+        });
+
+        // Event Listener on Stock Toggle
+        cardDetails_stockToggle.addEventListener('change', () => {
+            const id = chosenSale.id;
+            const newStockStatus = cardDetails_stockToggle.checked;
+
+            // Use the custom fetchAPI function to update the stock status
+            fetchAPI(`/api/sales/${id}/stock`, 'PATCH', { stock: newStockStatus })
+                .then((data) => {
+                    if (data.success) {
+                        // Update the sale object's stock status
+                        chosenSale.stock = newStockStatus;
+
+                        // Enable/disable like and dislike buttons based on stock status
+                        cardDetails_dislikes.disabled = !newStockStatus;
+                        cardDetails_likes.disabled = !newStockStatus;
+
+                        // Handle success
+                        console.log('Stock status updated successfully.');
+                    } else {
+                        // Handle the error
+                        console.error('Failed to update stock status:', data.message);
+                    }
+                })
+                .catch((error) => {
+                    // Handle fetchAPI errors
+                    console.error('Fetch API error:', error);
+                });
+        });
+
+        // ===================== User =====================
+
+        // Create custom marker icons
+        const userIcon = L.icon({
+            iconUrl: '/img/street-view.svg',
+            className: 'fa-icon',
+            iconSize: [40, 40],
+            iconAnchor: [20, 30],
+        });
+
+        // Initialize geolocation and userMarker
+        let userLocation = { lat: null, lng: null };
+        let userMarker = L.marker(userLocation, { icon: userIcon }).addTo(map);
+        initializeUserLocation(userLocation, userMarker);
+
+        function initializeUserLocation(userLocation, userMarker) {
+            // Initialize geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    userLocation.lat = position.coords.latitude;
+                    userLocation.lng = position.coords.longitude;
+                    userMarker.setLatLng(userLocation);
+                    map.setView(userLocation, 18);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Locate User Button Event Listener
+        const focusUserLocationBtn = document.getElementById('focusUserLocationBtn');
+        focusUserLocationBtn.addEventListener('click', () => {
+            initializeUserLocation(userLocation, userMarker);
+        });
+
+        // ===================== Search Stores From Name =====================
+
+        // Access needed DOM elements:
+        const storeNameExtendedButton = document.getElementById('storeNameExtendedButton');
+        const storeNameExtendedInput = document.getElementById('storeNameExtendedInput');
+        const storeNameCollapsedButton = document.getElementById('storeNameCollapsedButton');
+        const storeNameCollapsedInput = document.getElementById('storeNameCollapsedInput');
+
+        // Search by name
+        function filterStoresByName(searchText) {
+            // Remove the existing markers from the map
+            storesMarkersLayerGroup.clearLayers();
+
+            // Filter the stores based on their name
+            stores.then((res) => {
+                if (typeof res !== 'undefined' && res.features.length > 0) {
+
+                    // Check if searchText is empty and if so, return all stores
+                    if (!searchText && (storesLayer !== null)) {
+                        storesMarkersLayerGroup.addLayer(storesLayer);
+                        return;
+                    }
+
+                    let storesFilteredLayer = createStoreLayer({
+                        type: "FeatureCollection",
+                        features: res.features.filter(store => {
+                            const storeName = (store.properties.name || 'Unknown').toLowerCase();
+                            return storeName.includes(searchText);
+                        })
+                    });
+
+                    // Add the filtered markers to the map
+                    storesMarkersLayerGroup.addLayer(storesFilteredLayer);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // Add event listeners to the search buttons
+        storeNameExtendedButton.addEventListener('click', () => {
+            filterStoresByName(storeNameExtendedInput.value.toLowerCase());
+        });
+        storeNameCollapsedButton.addEventListener('click', () => {
+            filterStoresByName(storeNameCollapsedInput.value.toLowerCase());
+        });
+
+        // Add event listeners to the search inputs
+        storeNameExtendedInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                filterStoresByName(storeNameExtendedInput.value.toLowerCase());
+            }
+        });
+
+        storeNameCollapsedInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                filterStoresByName(storeNameCollapsedInput.value.toLowerCase());
+            }
+        });
+
+        // ===================== Search Stores from Category =====================
+
+        // Access needed DOM elements:
+        const extendedCategoryInput = document.getElementById('storeCategoryExtendedInput');
+        const extendedCategoryDropDown = document.getElementById('storeCategoryExtendedDropdown');
+        const extendedCategoryDropList = document.getElementById('storeCategoryExtendedDropList');
+
+        const collapsedCategoryInput = document.getElementById('storeCategoryCollapsedInput');
+        const collapsedCategoryDropDown = document.getElementById('storeCategoryCollapsedDropdown');
+        const collapsedCategoryDropList = document.getElementById('storeCategoryCollapsedDropList');
+
+        // Fill the dropdown menu with the categories
+        let categories = fetchAPI("/api/categories", "GET");
+
+        categories.then((res) => {
+            if (typeof res !== 'undefined' && res.length > 0) {
+                res.forEach(category => {
+                    const categoryLink = document.createElement('a');
+                    categoryLink.classList.add('custom-active', 'dropdown-item', 'me-2', 'text-gray-700');
+                    categoryLink.textContent = category.name;
+                    extendedCategoryDropDown.appendChild(categoryLink);
+                    collapsedCategoryDropDown.appendChild(categoryLink.cloneNode(true));
+                });
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+
+        // Add an event listener to the input for focusing
+        extendedCategoryInput.addEventListener('focus', function () {
+            extendedCategoryDropDown.style.display = 'block';
+        });
+
+        collapsedCategoryInput.addEventListener('focus', function () {
+            collapsedCategoryDropDown.style.display = 'block';
+        });
+
+        // Add an event listener to the dropdown menu options
+        extendedCategoryDropDown.addEventListener('click', function (event) {
+            // Check if a dropdown item was clicked
+            if (event.target.classList.contains('custom-active')) {
+                // Filter the stores based on the category
+                filterStoresByCategory(event.target.textContent.trim());
+                // Update the input's value with the clicked option's text
+                extendedCategoryInput.value = event.target.textContent.trim();
+                extendedCategoryDropDown.style.display = 'none';
+            }
+        });
+
+        collapsedCategoryDropDown.addEventListener('click', function (event) {
+            // Check if a dropdown item was clicked
+            if (event.target.classList.contains('custom-active')) {
+                // Filter the stores based on the category
+                filterStoresByCategory(event.target.textContent.trim());
+                // Update the input's value with the clicked option's text
+                collapsedCategoryInput.value = event.target.textContent.trim();
+                collapsedCategoryDropDown.style.display = 'none';
+            }
+        });
+
+        // Search by category
+        function filterStoresByCategory(categoryName) {
+
+            // Remove the existing markers from the map
+            storesMarkersLayerGroup.clearLayers();
+
+            // Check if categoryId is empty and if so, return all stores
+            if (categoryName == 'Search for products') {
+                storesMarkersLayerGroup.addLayer(storesLayer);
+                return;
+            }
+
+            // Fetch the filtered stores based on the Catergory ID
+            let storesFiltered = fetchAPI(`/api/stores/categories/${categoryName}`, "GET");
+
+            // Filter the stores based on their category
+            storesFiltered.then((res) => {
+                if (typeof res !== 'undefined' && res.features.length > 0) {
+                    let storesFilteredLayer = createStoreLayer(res);
+
+                    // Add the filtered markers to the map
+                    storesMarkersLayerGroup.addLayer(storesFilteredLayer);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // Add an event listener to the filter buttons 
+        storeCategoryExtendedButton.addEventListener('click', () => {
+            filterStoresByCategory(extendedCategoryInput.value.trim());
+        });
+
+        storeCategoryCollapsedButton.addEventListener('click', () => {
+            filterStoresByCategory(collapsedCategoryInput.value.trim());
+        });
+
+        // =================== Add Sale Offer ===================
+
+        // Access needed DOM elements:
+        const card_addSaleDropdownItems = document.getElementById('card_addSaleDropdownItems');
+        const card_addSalePriceForm = document.getElementById('card_addSalePriceForm');
+        const card_addSalePriceInput = document.getElementById('card_addSalePriceInput');
+        const card_submitSalePriceButton = document.getElementById('card_submitSalePriceButton');
+
+        // On add sale button click, show the dropdown menu
+        const card_addSaleBtn = document.getElementById('card_addSaleBtn');
+        card_addSaleBtn.addEventListener('click', () => {
+            if (card_customDropDown.classList.contains('show')) {
+                card_customDropDown.classList.remove('show');
+                return;
+            }
+            card_customDropDown.classList.add('show');
+            card_addSaleDropdownItems.classList.remove('d-none');
+            card_addSalePriceForm.classList.add('d-none');
+
+            populateCategories();
+        });
+
+        // load the categories
+        function populateCategories() {
+            // Clear the previous information
+            clearChildrenElements(card_addSaleDropdownItems);
+
+            categories.then((res) => {
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    res.forEach(category => {
+                        const categoryLink = document.createElement('a');
+                        categoryLink.classList.add('custom-active', 'dropdown-item', 'me-2', 'text-gray-700');
+                        categoryLink.textContent = category.name;
+                        categoryLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            populateSubCategories(category.id);
+                        });
+                        card_addSaleDropdownItems.appendChild(categoryLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // load the subcategories
+        function populateSubCategories(categoryId) {
+            // fetch the subcategories from the categoryID
+            let subcategories = fetchAPI(`/api/categories/${categoryId}/subcategories`, "GET");
+
+            subcategories.then((res) => {
+                // Clear the previous information
+                clearChildrenElements(card_addSaleDropdownItems);
+
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    res.forEach(subcategory => {
+                        const subcategoryLink = document.createElement('a');
+                        subcategoryLink.classList.add('custom-active', 'dropdown-item', 'me-2', 'text-gray-700');
+                        subcategoryLink.textContent = subcategory.name;
+                        subcategoryLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            populateProducts(subcategory.id);
+                        });
+                        card_addSaleDropdownItems.appendChild(subcategoryLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        // load the products
+        function populateProducts(subcategoryId) {
+            // fetch the products from the subcategoryID
+            let products = fetchAPI(`/api/categories/subcategories/${subcategoryId}/products`, "GET");
+
+            products.then((res) => {
+                if (typeof res !== 'undefined' && res.length > 0) {
+                    // Clear the previous information
+                    clearChildrenElements(card_addSaleDropdownItems);
+
+                    res.forEach(product => {
+                        const productLink = document.createElement('a');
+                        productLink.classList.add('custom-active', 'dropdown-item', 'me-2', 'text-gray-700');
+                        productLink.textContent = product.name;
+                        productLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            card_addSaleDropdownItems.classList.add('d-none');
+
+                            // Display the price input form
+                            chosenProduct = product.id;
+                            card_addSalePriceInput.value = '';
+                            card_addSalePriceForm.classList.remove('d-none');
+                        });
+                        card_addSaleDropdownItems.appendChild(productLink);
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+        card_submitSalePriceButton.addEventListener('click', async () => {
+            const price = parseFloat(card_addSalePriceInput.value);
+
+            if (isNaN(price) || price <= 0) {
+                // Handle invalid price input
+                console.error('Invalid price');
+                alert('Sorry, input price was invalid. Please try again.');
+                return;
+            }
+
+            try {
+                const saleData = {
+                    store_id: chosenStore,
+                    product_id: chosenProduct,
+                    price: price,
+                };
+
+                // Send the sale data to the backend 
+                const response = await fetchAPI('/api/sales/submit', 'POST', saleData);
+
+                if (response && response.message === 'Sale added successfully') {
+                    // Sale successfully added
+                    console.log('Sale added successfully');
+                    // Display a success message to the user
+                    alert('Sale added successfully');
+                } else if ( response.message === 'Failed to add sale') {
+                    // Sale was not added (e.g., price not low enough)
+                    console.error('Failed to add sale');
+                    // Display an error message to the user
+                    alert('Sorry, sale\'s price is not at least 20% lower than the existing sale.');
+                }
+                // Clear the dropdown menu
+                card_customDropDown.classList.remove('show');
+            } catch (error) {
+                console.error('Error adding sale:', error);
+                // Handle other errors, e.g., network issues
+            }
+        });
+
+        // ===================== Logout =====================
+
+        function logout() {
+            // Make a GET request to the logout route on the server
+            fetch('/users/logout', {
+                method: 'POST',
+                credentials: 'include', // Include credentials (cookies) in the request
+                redirect: 'follow'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Logout successful');
+                        window.location.href = '/login.html';
+                    } else {
+                        // Handle logout failure, e.g., by displaying an error message
+                        console.error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during server logout:', error);
+                });
+        }
+
+    </script>
+</body>
+
+</html>
